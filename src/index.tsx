@@ -2,16 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import SocketContextProvider from './context/WebSocket/websocketcontext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <SocketContextProvider socketUrl={"wss://www.cryptofacilities.com/ws/v1"} payload={{"event":"subscribe","feed":"book_ui_1","product_ids":["PI_XBTUSD"]}}>
+        <App />
+      </SocketContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
