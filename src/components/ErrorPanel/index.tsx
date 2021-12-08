@@ -6,6 +6,11 @@ import { ErrorProps } from './interface';
  * @param ErrorProps {@see ErrorProps }
  */
 const ErrorCard: React.FunctionComponent<ErrorProps> = ({ errors }) => { 
+    // Error Boundary
+    if(errors.length === 0) {
+        return null;
+    }
+
     return (
         <div>
             <h2>

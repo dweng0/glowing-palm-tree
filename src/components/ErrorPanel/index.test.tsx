@@ -1,16 +1,21 @@
-import ErrorCard from "."
+import ErrorPanel from "./index"
+import {render} from '@testing-library/react'
+import '@testing-library/jest-dom'
 
 describe('Tests for errors presentational component', () => { 
 
     it('Should compile at runtime', () => { 
-        expect(ErrorCard).toBeDefined();
+        expect(ErrorPanel).toBeDefined();
     });
 
     it('Should render the text provided to it', () => { 
+        // setup
+        const errors =["there was an error"];
 
-    });
+        // execute
+        const {getByText} = render(<ErrorPanel errors={errors}/>);
 
-    it('Should not render when no errors are provided', () => { 
-
+        // verify
+        expect(getByText(errors[0])).toBeInTheDocument();
     });
 })
