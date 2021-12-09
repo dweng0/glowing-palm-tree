@@ -14,6 +14,7 @@ import SocketSwitch from "../presentation/socketswitch";
 
 /**
  * A component that shows the state of the websocket
+ * Have added the disconnect button here, but it could be added anywhere thanks to the Contextual IOC pattern being used in this application
  */
 const StatusBarContainer: React.FunctionComponent = () => {
 

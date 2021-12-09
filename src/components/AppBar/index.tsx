@@ -8,8 +8,13 @@ import Container from "@mui/material/Container";
 import {toggleWrapper} from "./style";
 import {AppBarProps} from "./interface"
 import ThemeToggle from "../ThemeToggle";
-import StateBar from "../StatusBar/container";
+import StatusBar from "../StatusBar/container";
 
+/**
+ * Nav bar component, wraps theme toggle and StatusBar
+ * {@see ThemeToggle }
+ * {@see StatusBar }
+ */
 const NavBar: React.FunctionComponent<AppBarProps> = ({title}) => { 
   return (
     <AppBar position="absolute">
@@ -22,7 +27,7 @@ const NavBar: React.FunctionComponent<AppBarProps> = ({title}) => {
                     <ThemeToggle/>
                 </Box>
                 <Box sx={{ "& > :not(style)": { m: 1 } }}>
-                    <StateBar/>
+                    <StatusBar/>
                 </Box>
             </Toolbar>
         </Container>

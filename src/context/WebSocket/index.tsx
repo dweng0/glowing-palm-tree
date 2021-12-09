@@ -4,15 +4,7 @@ import { WebsocketStatus, SocketState, WebsocketResponse } from "./interface";
 import { websocketContextErrorBoundary } from "./errorboundaries";
 import { MAX_CONNECTION_ATTEMPTS, RETRY_DEBOUNCE } from "../../constants/datalayer";
 
-// default data for the context
-const DEFAULT_DATA: WebsocketResponse = {
-    data: null,
-    message: "",
-    state: "CLOSED",
-    socket: null
-}
-
-const WebSocketContext = createContext<WebsocketResponse>(DEFAULT_DATA);
+const WebSocketContext = createContext<WebsocketResponse | undefined>(undefined);
 
 /**
  * Higher order component that handles setting up websockets and provides state/data and the websocket for context
@@ -24,7 +16,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
     websocketContextErrorBoundary(socketUrl);
     
     //setup state
-    const [socketSatus, setSocketStatus] = useState<SocketState>({state: DEFAULT_DATA.state, message: ""});
+    const [socketSatus, setSocketStatus] = useState<SocketState>();
     const [response, setResponse] = useState<any>(null);
     const webSocket = useRef<WebSocket | null>(null);
 
@@ -95,7 +87,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
 }
 
 /**
- * A hook to expose websockets at any layer of component depth (IOC)
+ * A consumer hook exposes websockets at any layer of component depth provied they are wrapped in a provider(IOC)
  */
 export const useWebSocket = (): WebsocketResponse => { 
     const websocketContext = useContext(WebSocketContext);
