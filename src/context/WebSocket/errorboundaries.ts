@@ -4,21 +4,27 @@
  * It may throw if required.
  */
 
-import { SocketPayload } from "./WebSocket/interface";
+import { SocketPayload } from "./interface";
 
 /**
  * Boundary used by websocket context to determine code progression
  * @param socketUrl url provided to the context
- * @param payload the payload provided to the context
  */
- export const websocketContextErrorBoundary = (socketUrl: string, payload: SocketPayload): Array<string> => { 
+ export const websocketContextErrorBoundary = (socketUrl: string): void => { 
 
     // Error Boundary
-    const errors = [];
     if(!socketUrl.includes('wss://') && !socketUrl.includes('ws://')) {
         throw new Error('Socket url malformed, please contact a site administrator');
     }
+ }
 
+ /**
+  * Boundary to determine if the subscription message is good to send
+  * @param payload 
+  */
+ export const websocketPayloadBoundary = (payload: SocketPayload): Array<string> => { 
+
+    const errors = [];
     if(!payload.event) {
         errors.push('Incorrect payload provided to websocket context provider');
     }
@@ -30,6 +36,5 @@ import { SocketPayload } from "./WebSocket/interface";
     if(payload.product_ids.length === 0) {
         errors.push('No Products were provided to send over sockets');
     }
-
     return errors;
  }

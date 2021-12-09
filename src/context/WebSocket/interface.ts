@@ -11,7 +11,6 @@ export interface SocketPayload {
 
 export interface WebsocketStatus { 
     socketUrl: string,
-    payload: SocketPayload
 }
 
 export interface WebsocketResponse extends SocketState {

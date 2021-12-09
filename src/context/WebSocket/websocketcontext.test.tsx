@@ -8,26 +8,14 @@ import { SocketPayload } from './interface';
 describe('Tests for Websocket context', () => { 
 
     it('should render at runtime', () => { 
-        const testPayload: SocketPayload = {
-            event: "test",
-            feed: "best",
-            product_ids: ["jest"]
-        };
-
-        expect(<WebSocketContextProvider socketUrl={"wss://thing"} payload={testPayload} />).toBeDefined();
+      
+        expect(<WebSocketContextProvider socketUrl={"wss://thing"} />).toBeDefined();
     });
 
     it('should set an error state if the provided wss url is malformed', () => {
 
-        //setup
-        const testPayload: SocketPayload = {
-            event: "Test",
-            feed: "test",
-            product_ids: ["sdf"]
-        };
-   
         //execute
-        const executeTest = () => render(<WebSocketContextProvider socketUrl={"://test"} payload={testPayload} />);
+        const executeTest = () => render(<WebSocketContextProvider socketUrl={"://test"} />);
     
         //verify
         expect(executeTest).toThrowError();

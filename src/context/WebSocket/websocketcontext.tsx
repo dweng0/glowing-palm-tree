@@ -1,9 +1,10 @@
 import React, { createContext, useState, useEffect, useRef } from 'react';
 
 import { WebsocketStatus, SocketState, WebsocketResponse } from './interface';
-import { websocketContextErrorBoundary } from '../errorBoundaries';
+import { websocketContextErrorBoundary } from './errorboundaries';
 import ErrorPanel from '../../components/ErrorPanel';
 
+// default data for the context
 const DEFAULT_DATA: WebsocketResponse = {
     data: null,
     message: '',
@@ -14,12 +15,13 @@ const DEFAULT_DATA: WebsocketResponse = {
 const WebSocketContext = createContext<WebsocketResponse>(DEFAULT_DATA);
 
 /**
- * Higher order component that handles setting up websockets and provides state/data to context
+ * Higher order component that handles setting up websockets and provides state/data and the websocket for context
+ * IT: Abstracts the websocket connection, provides a layer for ui error handling. provides state, data and websocket to consumers
  */
-const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socketUrl, payload, children}) => { 
+const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socketUrl, children}) => { 
     
     // Error Boundary
-    const errors = websocketContextErrorBoundary(socketUrl, payload);
+    const errors = websocketContextErrorBoundary(socketUrl);
     
     //setup state
     const [socketSatus, setSocketStatus] = useState<SocketState>({state: DEFAULT_DATA.state, message: ''});
@@ -27,18 +29,18 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
     const webSocket = useRef<WebSocket | null>(null);
 
     /**
-     * it: makes an initial call to open up a websocket 
-     * when: provided a url or the payload to send changes
+     * IT: makes an initial call to open up a websocket 
+     * WHEN: provided a url
      */
     useEffect(() => { 
         try {
-             // create the socket , handle the different states
+             // create the socket, handle the different states
                 webSocket.current = new WebSocket(socketUrl);
                 webSocket.current.onopen = (event: Event) => setSocketStatus({state:"OPEN", message: "socket open"});
                 webSocket.current.onclose = (event: Event) => setSocketStatus({state: "CLOSED", message: "Socket connection closed"});
                 webSocket.current.onerror = (event: Event) => setSocketStatus({state: "ERROR", message: "An error has occurred on the websocket"});
                 webSocket.current.onmessage = (event: any) => setResponse(event.data); //event type doesn't containt data here... looks like lib needs updating.
-                webSocket.current.send(JSON.stringify(payload));
+
             } catch {
                 setSocketStatus({state: "ERROR", message: "Payload to send over websockets was malformed"});
             }
@@ -51,7 +53,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
                  }
             }
 
-    }, [setSocketStatus, setResponse, socketUrl, payload]);
+    }, [setSocketStatus, setResponse, socketUrl]);
 
     
     if (errors.length > 0) {
