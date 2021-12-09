@@ -7,9 +7,9 @@ import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
 
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { content } from '../../contants/languages'
-import {useWebSocket} from '../../context/WebSocket';
-import {wrapperStyle} from './style';
+import { content } from '../../../contants/languages'
+import {useWebSocket} from '../../../context/WebSocket';
+import {wrapperStyle} from '../style';
 //statusBar
 /**
  * A component that shows the state of the websocket
