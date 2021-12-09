@@ -1,9 +1,14 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { content } from './contants/languages'
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+describe("App Testing", () => { 
+    it("Should compile at runtime", () => expect(App).toBeDefined());
+    it("Should render to screen correctly", () => { 
+        render(<App />);
+        const title = screen.getByText(content.en.title);
+        expect(title).toBeInTheDocument();
+    })
+})
+
