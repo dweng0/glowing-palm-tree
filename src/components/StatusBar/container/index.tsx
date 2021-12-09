@@ -1,16 +1,14 @@
 import React from 'react';
-
 import CloudOffOutlinedIcon from '@mui/icons-material/CloudOffOutlined';
 import CloudDoneOutlinedIcon from '@mui/icons-material/CloudDoneOutlined';
 import CloudSyncOutlinedIcon from '@mui/icons-material/CloudSyncOutlined';
 import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
-
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { content } from '../../../contants/languages'
 import {useWebSocket} from '../../../context/WebSocket';
-import {wrapperStyle} from '../style';
-//statusBar
+import {wrapperStyle} from './style';
+import StatusBarBag from '../presentation';
+
 /**
  * A component that shows the state of the websocket
  */
@@ -58,8 +56,8 @@ const StatusBarContainer: React.FunctionComponent = () => {
    
     return (
         <Stack sx={wrapperStyle} direction="row" spacing={1}>
-            <Chip icon={stateData.icon()} color={stateData.color} label={stateData.label} variant="outlined" />
+            <StatusBarBag {...stateData} />
         </Stack>
     );
 }
-export default StatusBar;
+export default StatusBarContainer;
