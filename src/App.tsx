@@ -4,11 +4,11 @@ import AppBar from './components/AppBar';
 import SocketContextProvider from './context/WebSocket';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
-import { WEBSOCKET_URI } from './contants/datalayer';
+import { WEBSOCKET_URI } from './constants/datalayer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 //todo introduce language selection via context
-import { content } from './contants/languages';
+import { content } from './constants/languages';
 
 
 function App() {

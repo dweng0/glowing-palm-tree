@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { content } from './contants/languages'
+import { content } from './constants/languages'
 import App from './App';
 
 describe("App Testing", () => { 

@@ -4,7 +4,7 @@ import CloudDoneOutlinedIcon from '@mui/icons-material/CloudDoneOutlined';
 import CloudSyncOutlinedIcon from '@mui/icons-material/CloudSyncOutlined';
 import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
 import Stack from '@mui/material/Stack';
-import { content } from '../../../contants/languages'
+import { content } from '../../../constants/languages'
 import {useWebSocket} from '../../../context/WebSocket';
 import {wrapperStyle} from './style';
 import StatusBarBag from '../presentation';
@@ -16,15 +16,19 @@ const StatusBarContainer: React.FunctionComponent = () => {
 
     const {state} = useWebSocket();
 
-    //extract language todo use a context to get the correct language
+    //extract language todo use a context provider to get the correct language
     const { statusBar } = content.en;
     
+    //set defaults
     const stateData = {
         icon: () => <CloudDoneOutlinedIcon />,
         color: "primary",
         label: "...working"
     };
 
+    /**
+     * Set the icon data to be passed to the presentation layer, based on the useWebsocket hook context
+     */
     switch(state) { 
         case "OPEN":
             stateData.color = "success";
