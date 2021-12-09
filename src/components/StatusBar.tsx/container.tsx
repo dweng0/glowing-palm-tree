@@ -14,7 +14,7 @@ import {wrapperStyle} from './style';
 /**
  * A component that shows the state of the websocket
  */
-const StatusBar: React.FunctionComponent = () => {
+const StatusBarContainer: React.FunctionComponent = () => {
 
     const {state} = useWebSocket();
 

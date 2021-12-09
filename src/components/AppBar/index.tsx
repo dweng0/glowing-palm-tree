@@ -8,7 +8,7 @@ import Container from '@mui/material/Container';
 import {toggleWrapper} from './style';
 import {AppBarProps} from './interface'
 import ThemeToggle from '../ThemeToggle';
-import StateBar from '../StateBar';
+import StateBar from '../presentation.tsx/container';
 
 const NavBar: React.FunctionComponent<AppBarProps> = ({title}) => { 
   return (
