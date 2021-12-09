@@ -1,6 +1,23 @@
-import React from 'react';
+import StatusBarIcon from './index';
+import '@testing-library/jest-dom/extend-expect';
+import {render} from '@testing-library/react';
 
-const StatusBadge: React.FunctionComponent = () => { 
-    <Chip icon={stateData.icon()} color={stateData.color} label={stateData.label} variant="outlined" />
-    </Stack>
-};
+describe("Tests for the status bar presentation", () => { 
+    
+    it("should compile at runtime", () => expect(StatusBarIcon).toBeDefined());
+
+    it("should display the text data provided to it", () => {
+
+        //setup
+        const payload = { 
+            label: "blue",
+            color: "primary"
+        };
+
+        //execute
+        const { getByText } = render(<StatusBarIcon color={payload.color} label={payload.label} icon={() => { return null}} />);
+
+        //verify
+        expect(getByText(payload.label)).toBeInTheDocument();
+    });
+});

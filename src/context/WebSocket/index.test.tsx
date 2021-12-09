@@ -1,5 +1,5 @@
 import React from 'react';
-import WebSocketContextProvider from '.';
+import WebSocketContextProvider from './index';
 import {render} from '@testing-library/react'
 import '@testing-library/jest-dom';
 
