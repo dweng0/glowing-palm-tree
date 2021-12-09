@@ -1,14 +1,14 @@
 import ErrorPanel from "./index"
-import {render} from '@testing-library/react'
-import '@testing-library/jest-dom'
+import {render} from "@testing-library/react"
+import "@testing-library/jest-dom"
 
-describe('Tests for errors presentational component', () => { 
+describe("Tests for errors presentational component", () => { 
 
-    it('Should compile at runtime', () => { 
+    it("Should compile at runtime", () => { 
         expect(ErrorPanel).toBeDefined();
     });
 
-    it('Should render the text provided to it', () => { 
+    it("Should render the text provided to it", () => { 
         // setup
         const errors =["there was an error"];
 

@@ -13,8 +13,8 @@ import { SocketPayload } from "./interface";
  export const websocketContextErrorBoundary = (socketUrl: string): void => { 
 
     // Error Boundary
-    if(!socketUrl.includes('wss://') && !socketUrl.includes('ws://')) {
-        throw new Error('Socket url malformed, please contact a site administrator');
+    if(!socketUrl.includes("wss://") && !socketUrl.includes("ws://")) {
+        throw new Error("Socket url malformed, please contact a site administrator");
     }
  }
 
@@ -26,15 +26,15 @@ import { SocketPayload } from "./interface";
 
     const errors = [];
     if(!payload.event) {
-        errors.push('Incorrect payload provided to websocket context provider');
+        errors.push("Incorrect payload provided to websocket context provider");
     }
 
     if(!payload.feed) {
-        errors.push('No feed was provided to send over websockets');
+        errors.push("No feed was provided to send over websockets");
     }
 
     if(payload.product_ids.length === 0) {
-        errors.push('No Products were provided to send over sockets');
+        errors.push("No Products were provided to send over sockets");
     }
     return errors;
  }

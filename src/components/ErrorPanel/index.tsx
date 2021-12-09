@@ -1,5 +1,5 @@
-import React from 'react';
-import { ErrorProps } from './interface';
+import React from "react";
+import { ErrorProps } from "./interface";
 
 /**
  * A presentational component that renders an array of errors given to it. 

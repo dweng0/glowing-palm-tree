@@ -1,9 +1,9 @@
-import React from 'react';
-import {SocketSwitchProps} from './interface';
+import React from "react";
+import {SocketSwitchProps} from "./interface";
 
-import LoadingButton from '@mui/lab/LoadingButton';
-import Button from '@mui/material/Button';
-import {content} from '../../../constants/languages';
+import LoadingButton from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
+import {content} from "../../../constants/languages";
 
 /**
  * Presentational component that renders a button based on the state provided. returns an onclick event that can be used by the parent to perform an action

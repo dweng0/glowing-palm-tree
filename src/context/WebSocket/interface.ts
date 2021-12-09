@@ -1,5 +1,5 @@
 export interface SocketState { 
-    state: 'CLOSED' | 'CLOSING' | 'CONNECTING' | 'OPEN' | 'ERROR',
+    state: "CLOSED" | "CLOSING" | "CONNECTING" | "OPEN" | "ERROR",
     message: string
 }
 

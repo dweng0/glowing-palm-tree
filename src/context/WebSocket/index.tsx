@@ -1,13 +1,13 @@
-import React, { createContext, useState, useEffect, useRef, useContext } from 'react';
+import React, { createContext, useState, useEffect, useRef, useContext } from "react";
 
-import { WebsocketStatus, SocketState, WebsocketResponse } from './interface';
-import { websocketContextErrorBoundary } from './errorboundaries';
-import { MAX_CONNECTION_ATTEMPTS, RETRY_DEBOUNCE } from '../../constants/datalayer';
+import { WebsocketStatus, SocketState, WebsocketResponse } from "./interface";
+import { websocketContextErrorBoundary } from "./errorboundaries";
+import { MAX_CONNECTION_ATTEMPTS, RETRY_DEBOUNCE } from "../../constants/datalayer";
 
 // default data for the context
 const DEFAULT_DATA: WebsocketResponse = {
     data: null,
-    message: '',
+    message: "",
     state: "CLOSED",
     socket: null
 }
@@ -24,7 +24,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
     websocketContextErrorBoundary(socketUrl);
     
     //setup state
-    const [socketSatus, setSocketStatus] = useState<SocketState>({state: DEFAULT_DATA.state, message: ''});
+    const [socketSatus, setSocketStatus] = useState<SocketState>({state: DEFAULT_DATA.state, message: ""});
     const [response, setResponse] = useState<any>(null);
     const webSocket = useRef<WebSocket | null>(null);
 
@@ -67,7 +67,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
 
                 // fatal error, dont bother retrying
                 webSocket.current.onerror = (event: Event) => setSocketStatus({state: "ERROR", message: "An error has occurred on the websocket"});
-                webSocket.current.onmessage = (event: any) => setResponse(event.data); //event type doesn't containt data here... looks like lib needs updating
+                webSocket.current.onmessage = (event: any) => setResponse(event.data); //event type doesn"t containt data here... looks like lib needs updating
             };
             connect();
 
@@ -95,7 +95,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
 }
 
 /**
- * A hook to expose websockets at any layer of component depth
+ * A hook to expose websockets at any layer of component depth (IOC)
  */
 export const useWebSocket = (): WebsocketResponse => { 
     const websocketContext = useContext(WebSocketContext);

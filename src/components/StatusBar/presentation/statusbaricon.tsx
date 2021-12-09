@@ -1,6 +1,6 @@
-import React                    from 'react';
-import Chip                     from '@mui/material/Chip';
-import { StatusBarBadgeProps }    from './interface';
+import React                    from "react";
+import Chip                     from "@mui/material/Chip";
+import { StatusBarBadgeProps }    from "./interface";
 
 /**
  * Presentational component for the status bar.

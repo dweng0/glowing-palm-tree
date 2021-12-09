@@ -1,5 +1,5 @@
-import AppBar from './index';
-import {render} from '@testing-library/react';
+import AppBar from "./index";
+import {render} from "@testing-library/react";
 
 describe("Testing AppBar", () => { 
     it("Should compile at runtime", () => expect(<AppBar title="test"/>).toBeDefined());

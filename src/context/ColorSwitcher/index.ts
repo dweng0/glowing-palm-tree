@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Context that provides a method that is used to change the theme from dark to light

@@ -1,14 +1,14 @@
-import React from 'react';
-import ColorSwitcher from './context/ColorSwitcher';
-import AppBar from './components/AppBar';
-import SocketContextProvider from './context/WebSocket';
-import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
-import { WEBSOCKET_URI } from './constants/datalayer';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React from "react";
+import ColorSwitcher from "./context/ColorSwitcher";
+import AppBar from "./components/AppBar";
+import SocketContextProvider from "./context/WebSocket";
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import { WEBSOCKET_URI } from "./constants/datalayer";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 //todo introduce language selection via context
-import { content } from './constants/languages';
+import { content } from "./constants/languages";
 
 
 function App() {
@@ -18,13 +18,13 @@ function App() {
      *  Handle toggling of dark mode and light mode
      * ************************************************************************
      */
-    const [mode, setMode] = React.useState<'light'|'dark'>('dark');
+    const [mode, setMode] = React.useState<"light"|"dark">("dark");
     
     // use a memo to handle toggling, causing app to re render with new mode applied.
     const colorMode = React.useMemo(
             () => ({
             toggleColorMode: () => {
-                setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+                setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
             },
             }),
         [],

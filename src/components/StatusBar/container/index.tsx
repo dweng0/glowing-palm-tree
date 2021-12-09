@@ -1,15 +1,15 @@
-import React from 'react';
-import CloudOffOutlinedIcon from '@mui/icons-material/CloudOffOutlined';
-import CloudDoneOutlinedIcon from '@mui/icons-material/CloudDoneOutlined';
-import CloudSyncOutlinedIcon from '@mui/icons-material/CloudSyncOutlined';
-import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
-import Stack from '@mui/material/Stack';
-import { content } from '../../../constants/languages'
-import {useWebSocket} from '../../../context/WebSocket';
-import {wrapperStyle} from './style';
-import StatusBarBag from '../presentation/statusbaricon';
-import {StatusBarBadgeProps} from '../presentation/interface';
-import SocketSwitch from '../presentation/socketswitch';
+import React from "react";
+import CloudOffOutlinedIcon from "@mui/icons-material/CloudOffOutlined";
+import CloudDoneOutlinedIcon from "@mui/icons-material/CloudDoneOutlined";
+import CloudSyncOutlinedIcon from "@mui/icons-material/CloudSyncOutlined";
+import CloudOutlinedIcon from "@mui/icons-material/CloudOutlined";
+import Stack from "@mui/material/Stack";
+import { content } from "../../../constants/languages"
+import {useWebSocket} from "../../../context/WebSocket";
+import {wrapperStyle} from "./style";
+import StatusBarBag from "../presentation/statusbaricon";
+import {StatusBarBadgeProps} from "../presentation/interface";
+import SocketSwitch from "../presentation/socketswitch";
 
 
 /**
