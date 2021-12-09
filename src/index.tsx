@@ -2,13 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import SocketContextProvider from './context/WebSocket/websocketcontext';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import {WEBSOCKET_URI} from "./contants/datalayer";
+
+const theme = createTheme();
 ReactDOM.render(
   <React.StrictMode>
-      <SocketContextProvider socketUrl={WEBSOCKET_URI}>
-        <App />
-      </SocketContextProvider>
+      <ThemeProvider theme={theme}>
+            <App /> 
+      </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

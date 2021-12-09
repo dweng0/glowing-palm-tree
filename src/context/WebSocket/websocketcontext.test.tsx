@@ -1,9 +1,7 @@
 import React from 'react';
 import WebSocketContextProvider from './websocketcontext';
 import {render} from '@testing-library/react'
-import '@testing-library/jest-dom'
-import { SocketPayload } from './interface';
-
+import '@testing-library/jest-dom';
 
 describe('Tests for Websocket context', () => { 
 
