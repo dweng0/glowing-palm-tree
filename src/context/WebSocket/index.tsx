@@ -78,9 +78,17 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
 
     }, [setSocketStatus, setResponse, socketUrl]);
 
+    // Normalise values before placing it into the context
+    const value:WebsocketResponse  = {
+        data: response,
+        message: (socketSatus && socketSatus.message) ? socketSatus.message : "",
+        socket: webSocket.current,
+        state: (socketSatus && socketSatus.state) ? socketSatus.state : "CLOSED"
+    };
+   
     // Render the context, expose data plus the socket and its state
     return (
-        <WebSocketContext.Provider value={{...{data: response, socket: webSocket.current }, ...socketSatus}}>
+        <WebSocketContext.Provider value={value}>
             {children}
         </WebSocketContext.Provider>
     );
@@ -88,6 +96,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
 
 /**
  * A consumer hook exposes websockets at any layer of component depth provied they are wrapped in a provider(IOC)
+ * WebSocketContext is not exported -on purpose- to control its usage.
  */
 export const useWebSocket = (): WebsocketResponse => { 
     const websocketContext = useContext(WebSocketContext);
