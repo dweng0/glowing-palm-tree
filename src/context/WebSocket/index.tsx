@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useState, useEffect, useRef, useContext } from 'react';
 
 import { WebsocketStatus, SocketState, WebsocketResponse } from './interface';
 import { websocketContextErrorBoundary } from './errorboundaries';
@@ -61,6 +61,19 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
             {children}
         </WebSocketContext.Provider>
     );
+}
+
+/**
+ * A hook to expose websockets at any layer of component depth
+ */
+export const useWebSocket = (): WebsocketResponse => { 
+    const websocketContext = useContext(WebSocketContext);
+
+    if(websocketContext === undefined) { 
+        throw new Error("Please use in conjunction with a context provider")
+    }
+
+    return websocketContext;
 }
 
 export default SocketContextProvider;

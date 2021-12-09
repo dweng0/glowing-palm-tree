@@ -1,7 +1,7 @@
 import React from 'react';
 import ColorSwitcher from './context/ColorSwitcher';
 import AppBar from './components/AppBar';
-import SocketContextProvider from './context/WebSocket/websocketcontext';
+import SocketContextProvider from './context/WebSocket';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import { WEBSOCKET_URI } from './contants/datalayer';
