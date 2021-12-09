@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useRef, useContext } from 'r
 
 import { WebsocketStatus, SocketState, WebsocketResponse } from './interface';
 import { websocketContextErrorBoundary } from './errorboundaries';
+import { MAX_CONNECTION_ATTEMPTS, RETRY_DEBOUNCE } from '../../constants/datalayer';
 
 // default data for the context
 const DEFAULT_DATA: WebsocketResponse = {
@@ -32,13 +33,43 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
      * WHEN: provided a url
      */
     useEffect(() => { 
+       
         try {
-             // create the socket, handle the different states
+            let intervalIds:Array<any> = [];
+            const connect = () => {
+                // create the socket, handle the different states
                 webSocket.current = new WebSocket(socketUrl);
-                webSocket.current.onopen = (event: Event) => setSocketStatus({state:"OPEN", message: "socket open"});
-                webSocket.current.onclose = (event: Event) => setSocketStatus({state: "CLOSED", message: "Socket connection closed"});
+                
+                // open, happy, set status
+                webSocket.current.onopen = (event: Event)  => {
+
+                    // clear any timeouts we may have
+                    intervalIds.forEach(id => clearInterval(id));
+                    intervalIds = [];
+
+                    setSocketStatus({state:"OPEN", message: "socket open"});
+                }
+
+                // closed, maybe sad, retry.
+                webSocket.current.onclose = (event: Event) => {
+
+                    // retry n times. close if n is reached
+                    if(intervalIds.length < MAX_CONNECTION_ATTEMPTS) {
+
+                        setSocketStatus({state: "CONNECTING", message: "Socket connection closed, retrying "});
+                        intervalIds.push(setTimeout(connect, RETRY_DEBOUNCE));                        
+                    } else {
+                        setSocketStatus({state: "CLOSED", message: "Failed to re connect, server may be busy. "});
+                        intervalIds.forEach(id => clearInterval(id));
+                    }
+                    
+                }
+
+                // fatal error, dont bother retrying
                 webSocket.current.onerror = (event: Event) => setSocketStatus({state: "ERROR", message: "An error has occurred on the websocket"});
-                webSocket.current.onmessage = (event: any) => setResponse(event.data); //event type doesn't containt data here... looks like lib needs updating.
+                webSocket.current.onmessage = (event: any) => setResponse(event.data); //event type doesn't containt data here... looks like lib needs updating
+            };
+            connect();
 
 
             } catch {
