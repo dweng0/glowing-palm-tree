@@ -2,7 +2,6 @@ import React, { createContext, useState, useEffect, useRef } from 'react';
 
 import { WebsocketStatus, SocketState, WebsocketResponse } from './interface';
 import { websocketContextErrorBoundary } from './errorboundaries';
-import ErrorPanel from '../../components/ErrorPanel';
 
 // default data for the context
 const DEFAULT_DATA: WebsocketResponse = {
@@ -21,7 +20,7 @@ const WebSocketContext = createContext<WebsocketResponse>(DEFAULT_DATA);
 const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socketUrl, children}) => { 
     
     // Error Boundary
-    const errors = websocketContextErrorBoundary(socketUrl);
+    websocketContextErrorBoundary(socketUrl);
     
     //setup state
     const [socketSatus, setSocketStatus] = useState<SocketState>({state: DEFAULT_DATA.state, message: ''});
@@ -41,6 +40,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
                 webSocket.current.onerror = (event: Event) => setSocketStatus({state: "ERROR", message: "An error has occurred on the websocket"});
                 webSocket.current.onmessage = (event: any) => setResponse(event.data); //event type doesn't containt data here... looks like lib needs updating.
 
+
             } catch {
                 setSocketStatus({state: "ERROR", message: "Payload to send over websockets was malformed"});
             }
@@ -54,11 +54,6 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
             }
 
     }, [setSocketStatus, setResponse, socketUrl]);
-
-    
-    if (errors.length > 0) {
-       return <ErrorPanel errors={errors}/>
-    }
 
     // Render the context, expose data plus the socket and its state
     return (
