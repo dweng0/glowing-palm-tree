@@ -1,10 +1,10 @@
 export interface SocketState { 
-    state: "CLOSED" | "CLOSING" | "CONNECTING" | "OPEN" | "ERROR",
+    state: "CLOSED" | "CLOSING" | "CONNECTING" | "OPEN" | "ERROR" | "SUBSCRIBED",
     message: string
 }
 
 export interface SocketPayload { 
-    event: "subscribe" | "subscribed" | "error",
+    event:  "subscribe" | "subscribed" | "error" | "unsubscribe" | "unsubscribed";
     feed: string,
     product_ids: Array<string>
 }
