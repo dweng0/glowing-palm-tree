@@ -7,7 +7,7 @@ import { MAX_CONNECTION_ATTEMPTS, RETRY_DEBOUNCE } from "../../constants/datalay
 const WebSocketContext = createContext<WebsocketResponse | undefined>(undefined);
 
 /**
- * Higher order component that handles setting up websockets and provides state/data and the websocket for context
+ * Higher order component that handles setting up websockets and provides state and the websocket for context
  * IT: Abstracts the websocket connection, provides a layer for ui error handling. provides state, data and websocket to consumers
  */
 const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socketUrl, children}) => { 
@@ -17,7 +17,6 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
     
     //setup state
     const [socketSatus, setSocketStatus] = useState<SocketState>();
-    const [response, setResponse] = useState<any>(null);
     const webSocket = useRef<WebSocket | null>(null);
 
     /**
@@ -59,7 +58,6 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
 
                 // fatal error, dont bother retrying
                 webSocket.current.onerror = (event: Event) => setSocketStatus({state: "ERROR", message: "An error has occurred on the websocket"});
-                webSocket.current.onmessage = (event: any) => setResponse(event.data); //event type doesn"t containt data here... looks like lib needs updating
             };
             connect();
 
@@ -76,16 +74,15 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
                  }
             }
 
-    }, [setSocketStatus, setResponse, socketUrl]);
+    }, [setSocketStatus, socketUrl]);
 
     // Normalise values before placing it into the context
     const value:WebsocketResponse  = {
-        data: response,
         message: (socketSatus && socketSatus.message) ? socketSatus.message : "",
         socket: webSocket.current,
         state: (socketSatus && socketSatus.state) ? socketSatus.state : "CLOSED"
     };
-   
+
     // Render the context, expose data plus the socket and its state
     return (
         <WebSocketContext.Provider value={value}>
@@ -95,7 +92,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
 }
 
 /**
- * A consumer hook exposes websockets at any layer of component depth provied they are wrapped in a provider(IOC)
+ * A consumer hook exposes websockets at any layer of component depth provided they are wrapped in a provider(IOC)
  * WebSocketContext is not exported -on purpose- to control its usage.
  */
 export const useWebSocket = (): WebsocketResponse => { 

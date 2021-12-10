@@ -1,6 +1,7 @@
 import React from "react";
 import ColorSwitcher from "./context/ColorSwitcher";
 import AppBar from "./components/AppBar";
+import LadderWrapper  from "./components/LadderWrapper";
 import SocketContextProvider from "./context/WebSocket";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
@@ -49,6 +50,7 @@ function App() {
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <AppBar title={content.en.title} />
+                    <LadderWrapper/>
                 </Container>
             </SocketContextProvider>
         </ThemeProvider>    

@@ -4,7 +4,7 @@ export interface SocketState {
 }
 
 export interface SocketPayload { 
-    event: string,
+    event: "subscribe" | "subscribed" | "error",
     feed: string,
     product_ids: Array<string>
 }
