@@ -1,26 +1,23 @@
-import React, { useContext, useReducer, ReactNode} from 'react'
-import { SocketPayload } from '../WebSocket/interface'
-import { useWebSocket } from '../WebSocket'
+import React, { useContext, useReducer, ReactNode} from 'react';
+import { SocketPayload, event } from '../WebSocket/interface';
+import { useWebSocket } from '../WebSocket';
 
-// provide type for our subscriber/reducer
-type Action = {type: 'subscribe', payload: SocketPayload} | {type: 'unsubscribe', payload: SocketPayload} | {type: 'togglefeed', payload: SocketPayload} 
+type Action = {type:'subscribe' } | {type: 'unsubscribe' } | {type: 'togglefeed', payload: ["PI_XBTUSD"|"PI_ETHUSD"]}; 
 type Dispatch = (action: Action) => void
 type SubscriptionProviderProps = {children: ReactNode}
 
 
 // Create context privately
-const SubscriptionContext = React.createContext<{state: State; dispatch: Dispatch} | undefined>(undefined);
+const SubscriptionContext = React.createContext<{state: SocketPayload; dispatch: Dispatch} | undefined>(undefined);
 
 // Build subscribe reducer
-const subscribeReducer = (state:SocketPayload, action: Action): SocketPayload => { 
+export const subscribeReducer = (state:SocketPayload, action: Action): SocketPayload => { 
     switch (action.type) { 
         case 'subscribe': 
-        return {...state, ...action};
-        return {eventMessage} //change the state
         case 'unsubscribe':
-            return {eventMessage: {}} //change the state in event prop 
+        return {...state, ...{event: action.type}};
         case 'togglefeed':
-        return {eventMessage: {...action.payload}}
+            return {...state, ...{product_ids: action.payload}}
         default:
             throw new Error(`Type not supported`);
     }
@@ -43,16 +40,23 @@ function SubscriptionProvider({children}: SubscriptionProviderProps) {
     };
 
     // create the reducer
-    const [{eventMessage}, dispatch] = useReducer(subscribeReducer, {eventMessage: initialState});
+    const [data, dispatch] = useReducer(subscribeReducer, initialState);
 
     /**
      * determine what to do with sockets based on the changed state
      */
-    switch(eventMessage.event) {
+    switch(data.event) {
         case "subscribe":
         case "unsubscribe":
-        case "toggleFeed": 
-            socket.send(eventMessage);
+            socket.send(data);
+            break;
+        case "togglefeed": 
+            // unsubscribe first
+            const unsubscribe = {...data, ...{event: "unsubscibe"}};
+            socket.send(JSON.stringify(unsubscribe));
+
+            //then change feed
+            socket.send(JSON.stringify(data));
         break;
     }
 

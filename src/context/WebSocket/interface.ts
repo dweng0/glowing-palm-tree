@@ -3,8 +3,10 @@ export interface SocketState {
     message: string
 }
 
+export type event =  "subscribe" | "subscribed" | "error" | "unsubscribe" | "unsubscribed" | "togglefeed";
+
 export interface SocketPayload { 
-    event:  "subscribe" | "subscribed" | "error" | "unsubscribe" | "unsubscribed";
+    event: event,
     feed: string,
     product_ids: Array<string>
 }
