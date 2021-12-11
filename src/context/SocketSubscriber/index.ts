@@ -61,7 +61,7 @@ function SubscriptionProvider({children}: SubscriptionProviderProps) {
     }
 
 
-    const value = {state: eventMessage, dispatch}
+    const value = {state: data, dispatch};
     return (
         <SubscriptionContext.Provider value={value}>
             {children}
