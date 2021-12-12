@@ -3,6 +3,7 @@ import ColorSwitcher from "./context/ColorSwitcher";
 import AppBar from "./components/AppBar";
 import LadderWrapper  from "./components/LadderWrapper";
 import SocketContextProvider from "./context/WebSocket";
+import SocketSubscriptionProvider from "./context/SocketSubscriber";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { WEBSOCKET_URI } from "./constants/datalayer";
@@ -50,7 +51,9 @@ function App() {
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <AppBar title={content.en.title} />
-                    <LadderWrapper/>
+                    <SocketSubscriptionProvider>
+                        <LadderWrapper/>
+                    </SocketSubscriptionProvider>
                 </Container>
             </SocketContextProvider>
         </ThemeProvider>    

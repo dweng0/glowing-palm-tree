@@ -1,5 +1,5 @@
 import React, { useContext, useReducer, ReactNode} from 'react';
-import { SocketPayload, event } from '../WebSocket/interface';
+import { SocketPayload } from '../WebSocket/interface';
 import { useWebSocket } from '../WebSocket';
 
 type Action = {type:'subscribe' } | {type: 'unsubscribe' } | {type: 'togglefeed', payload: ["PI_XBTUSD"|"PI_ETHUSD"]}; 
@@ -70,11 +70,13 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 }
 
 const useSubscription = (): {state:SocketPayload, dispatch: Dispatch} => {
-  const context = useContext(SubscriptionContext)
+  const context = useContext(SubscriptionContext) as {state:SocketPayload, dispatch: Dispatch}
   if (context === undefined) {
     throw new Error('useCount must be used within a CountProvider')
   }
   return context
 }
 
-export {SubscriptionProvider, useSubscription}
+export { useSubscription }
+
+export default SubscriptionProvider;
