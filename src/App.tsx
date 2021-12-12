@@ -48,7 +48,7 @@ function App() {
     <ColorSwitcher.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
             <SocketContextProvider socketUrl={WEBSOCKET_URI}>
-                <Container component="main" maxWidth="xs">
+                <Container component="main" maxWidth="xl">
                     <CssBaseline />
                     <AppBar title={content.en.title} />
                     <SocketSubscriptionProvider>

@@ -37,9 +37,10 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
                     // clear any timeouts we may have
                     intervalIds.forEach(id => clearInterval(id));
                     intervalIds = [];
-
+                  
                     setSocketStatus({state:"OPEN", message: "socket open"});
                 }
+
 
                 // closed, maybe sad, retry.
                 webSocket.current.onclose = (event: Event) => {
@@ -61,7 +62,6 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
             };
             connect();
 
-
             } catch {
                 setSocketStatus({state: "ERROR", message: "Payload to send over websockets was malformed"});
             }
@@ -77,6 +77,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
     }, [setSocketStatus, socketUrl]);
 
     // Normalise values before placing it into the context
+
     const value:WebsocketResponse  = {
         message: (socketSatus && socketSatus.message) ? socketSatus.message : "",
         socket: webSocket.current,

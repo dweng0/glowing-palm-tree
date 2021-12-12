@@ -6,7 +6,6 @@ type Action = {type:'subscribe' } | {type: 'unsubscribe' } | {type: 'togglefeed'
 type Dispatch = (action: Action) => void
 type SubscriptionProviderProps = {children: ReactNode}
 
-
 // Create context privately
 const SubscriptionContext = React.createContext<{state: SocketPayload; dispatch: Dispatch} | undefined>(undefined);
 
@@ -15,6 +14,8 @@ export const subscribeReducer = (state:SocketPayload, action: Action): SocketPay
     switch (action.type) { 
         case 'subscribe': 
         case 'unsubscribe':
+            debugger;
+            console.log('im called');
         return {...state, ...{event: action.type}};
         case 'togglefeed':
             return {...state, ...{product_ids: action.payload}}
@@ -34,7 +35,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
     
     // provide the initial state
     const initialState: SocketPayload = { 
-        event: "unsubscribed",
+        event: "subscribed",
         feed: "book_ui_1",
         product_ids: ["PI_XBTUSD"]
     };
@@ -42,21 +43,28 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
     // create the reducer
     const [data, dispatch] = useReducer(subscribeReducer, initialState);
 
+    // optimistic message sending
+    const send = (message: SocketPayload): void => { 
+        if(socket !== null && socket.send !== null) { 
+            socket.send(JSON.stringify(message));
+        }
+    }
+    console.log(data.event);
     /**
      * determine what to do with sockets based on the changed state
      */
     switch(data.event) {
         case "subscribe":
         case "unsubscribe":
-            socket.send(data);
+            send(data);
             break;
         case "togglefeed": 
             // unsubscribe first
-            const unsubscribe = {...data, ...{event: "unsubscibe"}}; // see if you can just send the event instead of the whole payload
-            socket.send(JSON.stringify(unsubscribe));
+            const unsubscribe = {...data, ...{event: "unsubscibe" as "unsubscribe"}}; // see if you can just send the event instead of the whole payload
+            send(unsubscribe);
 
             //then change feed
-            socket.send(JSON.stringify(data));
+            send(data);
         break;
     }
 

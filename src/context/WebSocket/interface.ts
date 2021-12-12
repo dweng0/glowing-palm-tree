@@ -16,6 +16,5 @@ export interface WebsocketStatus {
 }
 
 export interface WebsocketResponse extends SocketState {
-    data: any,
     socket: WebSocket | null
 }
