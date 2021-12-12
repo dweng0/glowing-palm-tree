@@ -18,7 +18,7 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     /**
     * IT: stores the ccy for a given feed
     */
-    const [currencies, setCurrencies] = useState<["PI_XBTUSD" | "PI_ETHUSD"]>(state.product_ids);
+    const [currencies, setCurrencies] = useState<Array<string>>(state.product_ids);
     
     const [pauseFeed, setPauseFeed] = useState<boolean>(true);
 
