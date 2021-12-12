@@ -27,7 +27,7 @@ export const subscribeReducer = (state:SocketPayload, action: Action): SocketPay
  * Provide context for handling subscriptions to the websocket
  * @param 
  */
-function SubscriptionProvider({children}: SubscriptionProviderProps) {
+const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 
     // pull in websockets
     const {socket} = useWebSocket();
@@ -52,7 +52,7 @@ function SubscriptionProvider({children}: SubscriptionProviderProps) {
             break;
         case "togglefeed": 
             // unsubscribe first
-            const unsubscribe = {...data, ...{event: "unsubscibe"}};
+            const unsubscribe = {...data, ...{event: "unsubscibe"}}; // see if you can just send the event instead of the whole payload
             socket.send(JSON.stringify(unsubscribe));
 
             //then change feed
@@ -69,7 +69,7 @@ function SubscriptionProvider({children}: SubscriptionProviderProps) {
     );
 }
 
-function useSubscription() {
+const useSubscription = (): {state:SocketPayload, dispatch: Dispatch} => {
   const context = useContext(SubscriptionContext)
   if (context === undefined) {
     throw new Error('useCount must be used within a CountProvider')
@@ -77,4 +77,4 @@ function useSubscription() {
   return context
 }
 
-export {SubscriptionProvider, useCount}
+export {SubscriptionProvider, useSubscription}
