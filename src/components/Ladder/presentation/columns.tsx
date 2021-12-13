@@ -1,6 +1,6 @@
-import React from 'react';
-import { ColumnProps, ColumnDecorator } from '../interface';
-import { AgGridColumn } from 'ag-grid-react';
+import React from "react";
+import { ColumnProps, ColumnDecorator } from "../interface";
+import { AgGridColumn } from "ag-grid-react";
 
 const Columns: React.FunctionComponent<ColumnProps> = ({items}) => { 
 

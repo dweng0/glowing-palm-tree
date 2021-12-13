@@ -1,8 +1,8 @@
-import React, { useContext, useReducer, ReactNode} from 'react';
-import { SocketPayload } from '../WebSocket/interface';
-import { useWebSocket } from '../WebSocket';
+import React, { useContext, useReducer, ReactNode} from "react";
+import { SocketPayload } from "../WebSocket/interface";
+import { useWebSocket } from "../WebSocket";
 
-type Action = {type:'subscribe' } | {type: 'unsubscribe' } | {type: 'togglefeed', payload: Array<string>}; 
+type Action = {type:"subscribe" } | {type: "unsubscribe" } | {type: "togglefeed", payload: Array<string>}; 
 type Dispatch = (action: Action) => void
 type SubscriptionProviderProps = {children: ReactNode}
 
@@ -12,12 +12,10 @@ const SubscriptionContext = React.createContext<{state: SocketPayload; dispatch:
 // Build subscribe reducer
 export const subscribeReducer = (state:SocketPayload, action: Action): SocketPayload => { 
     switch (action.type) { 
-        case 'subscribe': 
-        case 'unsubscribe':
-            debugger;
-            console.log('im called');
+        case "subscribe": 
+        case "unsubscribe":
         return {...state, ...{event: action.type}};
-        case 'togglefeed':
+        case "togglefeed":
             return {...state, ...{product_ids: action.payload}}
         default:
             throw new Error(`Type not supported`);
@@ -49,7 +47,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
             socket.send(JSON.stringify(message));
         }
     }
-    console.log(data.event);
+
     /**
      * determine what to do with sockets based on the changed state
      */
@@ -59,6 +57,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
             send(data);
             break;
         case "togglefeed": 
+            debugger;
             // unsubscribe first
             const unsubscribe = {...data, ...{event: "unsubscibe" as "unsubscribe"}}; // see if you can just send the event instead of the whole payload
             send(unsubscribe);
@@ -84,7 +83,7 @@ export type subscriptionContextReturnType = {state: SocketPayload, dispatch: Dis
 const useSubscription = (): subscriptionContextReturnType => {
   const context = useContext(SubscriptionContext) as {state:SocketPayload, dispatch: Dispatch}
   if (context === undefined) {
-    throw new Error('useCount must be used within a CountProvider')
+    throw new Error("useCount must be used within a CountProvider")
   }
   return context
 }

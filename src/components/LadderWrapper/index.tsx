@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
+import React, { useState, useEffect } from "react";
+import Card from "@mui/material/Card";
 import { useSubscription} from "../../context/SocketSubscriber";
 import Typography from "@mui/material/Typography";
 import Selector from "../CurrencySelector";

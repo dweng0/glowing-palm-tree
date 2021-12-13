@@ -1,6 +1,6 @@
-import React from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import Columns from '../presentation/columns'
+import React from "react";
+import { AgGridReact } from "ag-grid-react";
+import Columns from "../presentation/columns"
 
 const columns = [{field: "Total"}, {field: "Size"}, {field: "Price"}];
 
