@@ -1,6 +1,7 @@
-import React, { useContext, useReducer, ReactNode} from "react";
+import React, { useContext, useReducer, ReactNode, useState} from "react";
 import { SocketPayload } from "../WebSocket/interface";
 import { useWebSocket } from "../WebSocket";
+import { CryptoFeed } from "../../interface";
 
 type Action = {type:"subscribe" } | {type: "unsubscribe" } | {type: "togglefeed", payload: Array<string>}; 
 type Dispatch = (action: Action) => void
@@ -30,6 +31,9 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 
     // pull in websockets
     const {socket} = useWebSocket();
+    
+    // place to hold data
+    const [feed, setFeed] = useState<CryptoFeed>()
     
     // provide the initial state
     const initialState: SocketPayload = { 
@@ -67,8 +71,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
         break;
     }
 
-
-    const value = {state: data, dispatch};
+    const value = {state: data, dispatch, feed};
     return (
         <SubscriptionContext.Provider value={value}>
             {children}
@@ -77,11 +80,11 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 }
 
 // set the return type
-export type subscriptionContextReturnType = {state: SocketPayload, dispatch: Dispatch};
+export type subscriptionContextReturnType = {state: SocketPayload, dispatch: Dispatch, feed: CryptoFeed};
 
 // expose the subscription
 const useSubscription = (): subscriptionContextReturnType => {
-  const context = useContext(SubscriptionContext) as {state:SocketPayload, dispatch: Dispatch}
+  const context = useContext(SubscriptionContext) as {state:SocketPayload, dispatch: Dispatch, feed: CryptoFeed}
   if (context === undefined) {
     throw new Error("useCount must be used within a CountProvider")
   }

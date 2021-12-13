@@ -41,7 +41,6 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
                     setSocketStatus({state:"OPEN", message: "socket open"});
                 }
 
-
                 // closed, maybe sad, retry.
                 webSocket.current.onclose = (event: Event) => {
 

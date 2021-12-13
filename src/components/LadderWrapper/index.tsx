@@ -55,7 +55,7 @@ const LadderWrapper: React.FunctionComponent = () =>  {
                     <Selector currentSelection={currencies[0]} onSelect={(event) => setCurrencies([event.target.value])} />
                 </div>                
                 <div style={ladderStyle}>
-                   <Ladder/>
+                   <Ladder />
                    <Ladder />
                 </div>
             </Card>
