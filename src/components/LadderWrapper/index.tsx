@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
-import InputLabel from '@mui/material/InputLabel';
 import { useSubscription} from "../../context/SocketSubscriber";
+import Typography from "@mui/material/Typography";
+import Selector from "../CurrencySelector";
+import { headStyle } from "./style";
 
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-
-import MenuItem from '@mui/material/MenuItem';
-
+/**
+ * Container that handles the switching of feeds 
+ */
 const LadderWrapper: React.FunctionComponent = () =>  {
-    debugger;
+
     /**
      * *********************************************************
      * Hooks
@@ -42,24 +43,20 @@ const LadderWrapper: React.FunctionComponent = () =>  {
      */
     useEffect(() => dispatch({type:"togglefeed", payload:currencies}), [currencies, dispatch]);
 
-    console.log('state is', state);
-
     return (
-        <div style={{paddingTop:"120px", width: "1024px"}}>
+        <div style={{paddingTop:"120px"}}>
             <Card variant="outlined">
-            <InputLabel id="label">Currency</InputLabel>
-                <Select
-                    labelId="label"
-                    id="ccyselect"
-                    value={12}
-                    label="label"
-                    onChange={()=>{}}
-                    >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-                {JSON.stringify(state)}
+                <div style={headStyle}>
+                    <Typography variant="h5" noWrap component="div" sx={{ mr: 2, display: { xs: "none", md: "flex" } }} >
+                        Order Book
+                    </Typography>
+                    <p>Spread</p>
+                    <Selector currentSelection={currencies[0]} onSelect={(event) => setCurrencies([event.target.value])} />
+                </div>
+                
+                <div>
+                    {JSON.stringify(state)}
+                </div>
             </Card>
         </div>
     )

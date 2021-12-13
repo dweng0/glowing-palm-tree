@@ -1,0 +1,1 @@
+export const headStyle = {display: "flex", justifyContent:"space-between", margin:"18px"}
