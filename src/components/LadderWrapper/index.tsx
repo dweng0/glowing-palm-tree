@@ -3,7 +3,8 @@ import Card from "@mui/material/Card";
 import { useSubscription} from "../../context/SocketSubscriber";
 import Typography from "@mui/material/Typography";
 import Selector from "../CurrencySelector";
-import { headStyle } from "./style";
+import { headStyle, ladderStyle } from "./style";
+import Ladder from "../Ladder";
 
 /**
  * Container that handles the switching of feeds 
@@ -52,10 +53,10 @@ const LadderWrapper: React.FunctionComponent = () =>  {
                     </Typography>
                     <p>Spread</p>
                     <Selector currentSelection={currencies[0]} onSelect={(event) => setCurrencies([event.target.value])} />
-                </div>
-                
-                <div>
-                    {JSON.stringify(state)}
+                </div>                
+                <div style={ladderStyle}>
+                   <Ladder/>
+                   <Ladder />
                 </div>
             </Card>
         </div>
