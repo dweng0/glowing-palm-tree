@@ -42,7 +42,7 @@ const LadderWrapper: React.FunctionComponent = () =>  {
      * WHEN: the currency state changes
      */
     useEffect(() => dispatch({type:"togglefeed", payload:currencies}), [currencies, dispatch]);
-
+    
     return (
         <div style={{paddingTop:"120px"}}>
             <Card variant="outlined">

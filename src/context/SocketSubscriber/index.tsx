@@ -16,7 +16,7 @@ export const subscribeReducer = (state:SocketPayload, action: Action): SocketPay
         case "unsubscribe":
         return {...state, ...{event: action.type}};
         case "togglefeed":
-            return {...state, ...{product_ids: action.payload}}
+            return {...state, ...{product_ids: action.payload, event: "togglefeed"}}
         default:
             throw new Error(`Type not supported`);
     }
@@ -57,13 +57,13 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
             send(data);
             break;
         case "togglefeed": 
-            debugger;
-            // unsubscribe first
-            const unsubscribe = {...data, ...{event: "unsubscibe" as "unsubscribe"}}; // see if you can just send the event instead of the whole payload
+            
+            const previousFeed = (data.product_ids[0] === "PI_XBTUSD") ? ["PI_ETHUSD"] : ["PI_XBTUSD"];
+            const unsubscribe = {...data, ...{event: "unsubscribe" as "unsubscribe" , product_ids: previousFeed}}; 
             send(unsubscribe);
 
             //then change feed
-            send(data);
+            send({...data, ...{event: "subscribe" as "subscribe"}});
         break;
     }
 
