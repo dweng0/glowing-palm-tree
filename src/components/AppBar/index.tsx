@@ -17,7 +17,7 @@ import StatusBar from "../StatusBar/container";
  */
 const NavBar: React.FunctionComponent<AppBarProps> = ({title}) => { 
   return (
-    <AppBar position="absolute">
+    <AppBar position="fixed">
         <Container maxWidth="xl">
             <Toolbar disableGutters>
                 <Typography variant="h4" noWrap component="div" sx={{ mr: 2, display: { xs: "none", md: "flex" } }} >

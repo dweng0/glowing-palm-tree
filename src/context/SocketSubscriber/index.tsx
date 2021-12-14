@@ -1,4 +1,4 @@
-import React, { useContext, useReducer, ReactNode, useState} from "react";
+import React, { useContext, useReducer, ReactNode, useState, useEffect} from "react";
 import { SocketPayload } from "../WebSocket/interface";
 import { useWebSocket } from "../WebSocket";
 import { CryptoFeed } from "../../interface";
@@ -8,7 +8,7 @@ type Dispatch = (action: Action) => void
 type SubscriptionProviderProps = {children: ReactNode}
 
 // Create context privately
-const SubscriptionContext = React.createContext<{state: SocketPayload; dispatch: Dispatch} | undefined>(undefined);
+const SubscriptionContext = React.createContext<{state: SocketPayload; dispatch: Dispatch, feed:CryptoFeed} | undefined>(undefined);
 
 // Build subscribe reducer
 export const subscribeReducer = (state:SocketPayload, action: Action): SocketPayload => { 
@@ -32,8 +32,8 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
     // pull in websockets
     const {socket} = useWebSocket();
     
-    // place to hold data
-    const [feed, setFeed] = useState<CryptoFeed>()
+    // place to hold socketData
+    const [feed, setFeed] = useState<CryptoFeed>();
     
     // provide the initial state
     const initialState: SocketPayload = { 
@@ -42,8 +42,21 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
         product_ids: ["PI_XBTUSD"]
     };
 
+    // IT: ties up messages to the socket provider
+    // WHEN: we have a socket.
+    useEffect(() => { 
+        if(socket && socket.onmessage) { 
+            socket.onmessage = (response) => { 
+               debugger;
+                if(!response.data.event) {
+                    setFeed(JSON.parse(response.data) as CryptoFeed)
+                }
+            }
+        }
+    }, [socket, setFeed]);
     // create the reducer
-    const [data, dispatch] = useReducer(subscribeReducer, initialState);
+    const [socketState, dispatch] = useReducer(subscribeReducer, initialState);
+
 
     // optimistic message sending
     const send = (message: SocketPayload): void => { 
@@ -55,23 +68,23 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
     /**
      * determine what to do with sockets based on the changed state
      */
-    switch(data.event) {
+    switch(socketState.event) {
         case "subscribe":
         case "unsubscribe":
-            send(data);
+            send(socketState);
             break;
         case "togglefeed": 
             
-            const previousFeed = (data.product_ids[0] === "PI_XBTUSD") ? ["PI_ETHUSD"] : ["PI_XBTUSD"];
-            const unsubscribe = {...data, ...{event: "unsubscribe" as "unsubscribe" , product_ids: previousFeed}}; 
+            const previousFeed = (socketState.product_ids[0] === "PI_XBTUSD") ? ["PI_ETHUSD"] : ["PI_XBTUSD"];
+            const unsubscribe = {...socketState, ...{event: "unsubscribe" as "unsubscribe" , product_ids: previousFeed}}; 
             send(unsubscribe);
 
             //then change feed
-            send({...data, ...{event: "subscribe" as "subscribe"}});
+            send({...socketState, ...{event: "subscribe" as "subscribe"}});
         break;
     }
 
-    const value = {state: data, dispatch, feed};
+    const value = {state: socketState, dispatch, feed};
     return (
         <SubscriptionContext.Provider value={value}>
             {children}
@@ -80,7 +93,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 }
 
 // set the return type
-export type subscriptionContextReturnType = {state: SocketPayload, dispatch: Dispatch, feed: CryptoFeed};
+export type subscriptionContextReturnType = {state: SocketPayload, dispatch: Dispatch, feed: CryptoFeed | undefined};
 
 // expose the subscription
 const useSubscription = (): subscriptionContextReturnType => {

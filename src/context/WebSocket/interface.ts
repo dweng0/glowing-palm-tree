@@ -11,6 +11,13 @@ export interface SocketPayload {
     product_ids: Array<string>
 }
 
+export interface SubscribedSocketPayload { 
+    feed: string
+    product_id: string,
+    bids: Array<Array<number>>,
+    asks: Array<Array<number>>
+}
+
 export interface WebsocketStatus { 
     socketUrl: string,
 }

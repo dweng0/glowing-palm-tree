@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Selector from "../CurrencySelector";
 import { headStyle, ladderStyle } from "./style";
 import Ladder from "../Ladder";
+import { CryptoFeed } from "../../interface";
 
 /**
  * Container that handles the switching of feeds 
@@ -20,7 +21,7 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     /**
     * IT: Abstracts away the websocket subscriptions and exposes a dispatcher and a subscription state
     */
-    const { state, dispatch } = useSubscription();
+    const { state, feed, dispatch } = useSubscription();
 
     /**
     * IT: stores the ccy for a given feed
@@ -44,24 +45,42 @@ const LadderWrapper: React.FunctionComponent = () =>  {
      */
     useEffect(() => dispatch({type:"togglefeed", payload:currencies}), [currencies, dispatch]);
     
+    /**
+     * Column to be provided to the ladders, reversed where required
+     */
+    const columns = [
+        { id: 1, field: "Price", flex: 1 },
+        { id: 1, field: "Size", flex: 1 },
+        { id: 1, field: "Total", flex: 1 }
+    ];
+
+    // lazy load feed
+    const getFeed = (feedType: "bids"|"asks" ): Array<Array<number>> => (feed) ? feed[feedType] : [];
+      
     return (
         <div style={{paddingTop:"120px"}}>
             <Card variant="outlined">
                 <div style={headStyle}>
                     <Typography variant="h5" noWrap component="div" sx={{ mr: 2, display: { xs: "none", md: "flex" } }} >
-                        Order Book
+                        Order Book //todo languages
                     </Typography>
-                    <p>Spread</p>
+                    <Typography variant="h5" noWrap component="div" sx={{ mr: 2, display: { xs: "none", md: "flex" } }} >
+                        Spread //todo languages
+                    </Typography>
                     <Selector currentSelection={currencies[0]} onSelect={(event) => setCurrencies([event.target.value])} />
                 </div>                
                 <div style={ladderStyle}>
-                   <Ladder />
-                   <Ladder />
+                   <Ladder data={getFeed("bids")} columns={columns} />
+                   <Ladder data={getFeed("asks")} columns={columns.reverse()} />
                 </div>
             </Card>
         </div>
     )
-
 }
 
 export default LadderWrapper;
+
+/**
+ *   columns: GridColDef[] ,
+    data:Array<[number, number]>
+ */
