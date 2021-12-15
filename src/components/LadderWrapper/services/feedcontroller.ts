@@ -27,7 +27,6 @@ export const getFeed = (feedType: FeedType, dataset: CryptoFeed, delta: CryptoFe
     
     const  applyDelta = (acc: Array<Feed>, curr: Feed, index: number, array: Array<Feed>) => {
         const rawData = delta[feedType].find(item => item[0] === curr.price);
-        console.log(rawData)
         const price = (rawData) ? rawData[0] : 0;
         const size = (rawData) ?rawData[1] : 0;
         if(price) { 
