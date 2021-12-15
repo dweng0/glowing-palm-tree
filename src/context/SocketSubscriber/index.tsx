@@ -62,7 +62,6 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
             // unsub
             const previousFeed = (socketState.product_ids[0] === "PI_XBTUSD") ? ["PI_ETHUSD"] : ["PI_XBTUSD"];
             const unsubscribe = {...socketState, ...{event: "unsubscribe" as "unsubscribe" , product_ids: previousFeed}}; 
-
             
             getSocket(socket)
             .then(websocket => {

@@ -7,8 +7,9 @@ import Selector from "../CurrencySelector";
 import { headStyle, ladderStyle, loadingWrapperStyle } from "./style";
 import Ladder from "../Ladder";
 import { getFeed, getDelta } from "./services/feedcontroller";
-import { FeedType, CryptoFeed } from "../../interface";
+import { FeedType, CryptoFeed, CryptoFeedDelta } from "../../interface";
 import { content } from "../../constants/languages";
+import { Feed } from "../Ladder/interface";
 
 /**
  * Container that handles the switching of feeds 
@@ -31,12 +32,20 @@ const LadderWrapper: React.FunctionComponent = () =>  {
   
     let  contentArea;
 
-    const feed = (type: FeedType) => getFeed(type, dataset as CryptoFeed);
+    const processData = (acc: Array<Feed>, curr: Array<number>, index: number): Array<Feed> => { 
+        if(curr.length >0) {
+            //todo update total with incrementals
+            acc.push({id: index, price:curr[0], size:curr[1], total: curr[0]});
+        }
+        return acc;    
+    }
+    
+    const feed = (type: FeedType) => getFeed(type, dataset as CryptoFeed, delta as CryptoFeedDelta);
     if(state.event === "subscribed" && dataset) {         
         contentArea = (
                 <div style={ladderStyle}>
-                   <Ladder data={feed("bids")} delta={getDelta("bids", delta)} columns={[...columns]} />
-                   <Ladder data={feed("asks")} delta={getDelta("asks", delta)} columns={columns.reverse()} />
+                   <Ladder data={feed("bids")} columns={[...columns]} />
+                   <Ladder data={feed("asks")} columns={columns.reverse()} />
                 </div>
         )
        

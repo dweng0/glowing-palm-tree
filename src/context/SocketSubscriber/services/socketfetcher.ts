@@ -2,6 +2,7 @@
 /**
  * Will return the socket when it is available.
  * @param socket 
+ * @returns promise<Websocket>
  */
 export const getSocket = (socket: WebSocket | null): Promise<WebSocket> => { 
     return new Promise<WebSocket>((resolve, reject) => { 
