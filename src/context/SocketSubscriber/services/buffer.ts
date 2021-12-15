@@ -1,4 +1,4 @@
-import { BufferInterface } from "./interface";
+import { BufferInterface } from "../interface";
 
 /**
  * Creates a buffer set for us to write to

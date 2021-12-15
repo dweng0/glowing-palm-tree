@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Card from "@mui/material/Card";
 import { useSubscription} from "../../context/SocketSubscriber";
 import Typography from "@mui/material/Typography";
 import Selector from "../CurrencySelector";
 import { headStyle, ladderStyle } from "./style";
 import Ladder from "../Ladder";
+import { getFeed } from "./services/feedcontroller";
+import { FeedType, CryptoFeed, CryptoFeedDelta } from "../../interface";
+import { content } from "../../constants/languages";
 
 /**
  * Container that handles the switching of feeds 
@@ -14,7 +17,7 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     /**
     * IT: Abstracts away the websocket subscriptions and exposes a dispatcher and a subscription state
     */
-    const { state, feed, dispatch } = useSubscription();
+    const { state, dataset, delta, dispatch } = useSubscription();
 
     /**
      * Column to be provided to the ladders, reversed where required
@@ -24,22 +27,20 @@ const LadderWrapper: React.FunctionComponent = () =>  {
         { id: 1, field: "Size", flex: 1 },
         { id: 1, field: "Total", flex: 1 }
     ];
-   
-    // lazy load feed
-    const getFeed = (feedType: "bids"|"asks" ): Array<Array<number>> => (feed) ? feed[feedType] : [];
+  
     let  contentArea;
 
-    if(state.event !== "subscribed") { 
-        contentArea = <p>Loading</p>
-    } else {
-        console.log(getFeed("bids"));
-        console.log(getFeed("asks"));
+    const feed = (type: FeedType) => getFeed(type, dataset as CryptoFeed, delta as CryptoFeedDelta);
+    if(state.event === "subscribed" && dataset) {         
         contentArea = (
                 <div style={ladderStyle}>
-                   <Ladder data={getFeed("bids")} columns={columns} />
-                   <Ladder data={getFeed("asks")} columns={columns.reverse()} />
+                   <Ladder data={feed("bids")} columns={columns} />
+                   <Ladder data={feed("asks")} columns={columns.reverse()} />
                 </div>
         )
+       
+    } else  {
+        contentArea = <p>{content.en.loading}</p>
     }
     console.log(state);
 
@@ -48,10 +49,10 @@ const LadderWrapper: React.FunctionComponent = () =>  {
             <Card variant="outlined">
                 <div style={headStyle}>
                     <Typography variant="h5" noWrap component="div" sx={{ mr: 2, display: { xs: "none", md: "flex" } }} >
-                        Order Book //todo languages
+                        {content.en.title}
                     </Typography>
                     <Typography variant="h5" noWrap component="div" sx={{ mr: 2, display: { xs: "none", md: "flex" } }} >
-                        Spread //todo languages
+                        {content.en.orderbook.spread}
                     </Typography>
                     <Selector currentSelection={state.product_ids[0]} onSelect={(event) => dispatch({type:"togglefeed", payload:[event.target.value]})} />
                 </div>                

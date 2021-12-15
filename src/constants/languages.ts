@@ -1,5 +1,6 @@
 export const content = { 
     en: {
+        loading: "loading",
         title: "Order Book",
         statusBar: {
             IDLE: "",
@@ -12,6 +13,9 @@ export const content = {
                 connect: "Connect",
                 disconnect: "disconnect"
             }
+        },
+        orderbook: {
+            spread: "Spread"
         }
     }
 }

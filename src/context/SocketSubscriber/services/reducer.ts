@@ -1,5 +1,5 @@
-import { SocketPayload } from "../WebSocket/interface";
-import { Action } from "./interface";
+import { SocketPayload } from "../../WebSocket/interface";
+import { Action } from "../interface";
 
 // Build setup reducer
 export const subscribeReducer = (state:SocketPayload, action: Action): SocketPayload => { 

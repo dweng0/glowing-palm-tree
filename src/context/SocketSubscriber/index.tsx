@@ -1,13 +1,15 @@
-import React, { useContext, useReducer, ReactNode, useState, useEffect} from "react";
+import React, { useContext, useReducer, useState, useEffect} from "react";
 import { SocketPayload } from "../WebSocket/interface";
 import { useWebSocket } from "../WebSocket";
-import { CryptoFeed } from "../../interface";
-import { bufferWriter } from "./buffer";
-import { Dispatch, SubscriptionProviderProps, SubscriptionContextReturnType } from "./interface";
-import { subscribeReducer } from "./reducer";
+import { CryptoFeed, CryptoFeedDelta } from "../../interface";
+import { bufferWriter } from "./services/buffer";
+import { SubscriptionProviderProps, SubscriptionContextReturnType } from "./interface";
+import { subscribeReducer } from "./services/reducer";
+import { messageFilter } from "./services/messagefilter";
+import { getSocket } from "./services/socketfetcher";
 
 // Create context privately
-const SubscriptionContext = React.createContext<{state: SocketPayload; dispatch: Dispatch, feed:CryptoFeed} | undefined>(undefined);
+const SubscriptionContext = React.createContext<SubscriptionContextReturnType | undefined>(undefined);
 
 /**
  * handles messages to/from websockets
@@ -17,11 +19,15 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 
     // pull in websockets and setup some state
     const {socket} = useWebSocket();
-    const [feed, setFeed] = useState<CryptoFeed>();
-    const [subscribed, setSubscribed] = useState<boolean>(false);
+    const [delta, setDelta] = useState();
+    const [dataset, setDataset] = useState();
 
-    // init a buffer
-    const { buffer, clear } = bufferWriter<CryptoFeed>(setFeed, 50000);
+    // setup message filter and buffer
+    const { filter } = messageFilter(setDataset, setDelta)
+    const { buffer, clear } = bufferWriter<CryptoFeed>(filter, 2000);
+
+    console.log('initial', dataset);
+    console.log('delta', delta);
 
     // IT: pushes socket messages into the buffer
     // WHEN: we have a socket.
@@ -35,39 +41,40 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
     // IT: Provides a reducer
     // FOR: Changing subscriptions/currencies
     const [socketState, dispatch] = useReducer(subscribeReducer, { 
-        event: "subscribed",
+        event: "subscribe",
         feed: "book_ui_1",
         product_ids: ["PI_XBTUSD"]
     });
-
-    // optimistic message sending
-    const send = (message: SocketPayload): void => { 
-        if(socket !== null && socket.send !== null) { 
-            socket.send(JSON.stringify(message));
-        }
-    }
     
     switch(socketState.event) {
         case "subscribe":
-            send(socketState);
-            dispatch({type: "subscribed"});
+            getSocket(socket)
+            .then(websocket => {
+                websocket.send(JSON.stringify(socketState));
+                dispatch({type: "subscribed"}); 
+            });
+            
             break;
         case "unsubscribe":
-            send(socketState);
+            getSocket(socket).then(websocket => websocket.send(JSON.stringify(socketState)));            
             break;
         case "togglefeed": 
             // unsub
             const previousFeed = (socketState.product_ids[0] === "PI_XBTUSD") ? ["PI_ETHUSD"] : ["PI_XBTUSD"];
             const unsubscribe = {...socketState, ...{event: "unsubscribe" as "unsubscribe" , product_ids: previousFeed}}; 
-            send(unsubscribe);
 
-            dispatch({type: "subscribe"})
+            
+            getSocket(socket)
+            .then(websocket => {
+                websocket.send(JSON.stringify(unsubscribe));
+                dispatch({type: "subscribe"}); 
+            });
             break;
         default: 
             console.log(`unknown feed provided ${socketState.event}`)
     }
 
-    const value = {state: socketState, dispatch, feed: feed as CryptoFeed, subscribed};
+    const value: SubscriptionContextReturnType  = {state: socketState, dispatch, dataset: dataset as unknown as CryptoFeed, delta: delta as unknown as CryptoFeedDelta };
     return (
         <SubscriptionContext.Provider value={value}>
             {children}
@@ -76,7 +83,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 }
 
 const useSubscription = (): SubscriptionContextReturnType => {
-  const context = useContext(SubscriptionContext) as SubscriptionContextReturnType;
+  const context = useContext(SubscriptionContext) as unknown as SubscriptionContextReturnType;
   if (context === undefined) {
     throw new Error("useCount must be used within a CountProvider")
   }
