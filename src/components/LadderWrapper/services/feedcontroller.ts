@@ -9,7 +9,7 @@ import { Feed } from "../../Ladder/interface";
 export const getDelta = (feedType: FeedType, delta: CryptoFeedDelta | undefined ): Array<Array<number>> => (delta) ? delta[feedType] : [];
     
 /**
- * returns the initial dataset
+ * returns the initial dataset can be pushed into the subscription socket?
  * @param feedType 
  * @param dataset 
  * @param delta 
@@ -27,9 +27,10 @@ export const getFeed = (feedType: FeedType, dataset: CryptoFeed, delta: CryptoFe
     
     const  applyDelta = (acc: Array<Feed>, curr: Feed, index: number, array: Array<Feed>) => {
         const rawData = delta[feedType].find(item => item[0] === curr.price);
+        
         const price = (rawData) ? rawData[0] : 0;
         const size = (rawData) ?rawData[1] : 0;
-        if(price) { 
+        if(price !== 0) { 
             if(size === 0) {
                 //no size left on price level, omit from array
                 return acc;

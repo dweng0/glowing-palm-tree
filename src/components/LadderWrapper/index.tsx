@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
-import { useSubscription} from "../../context/SocketSubscriber";
+import { useSubscription } from "../../context/SocketSubscriber";
 import Typography from "@mui/material/Typography";
 import CircularProgress from '@mui/material/CircularProgress';
 import Selector from "../CurrencySelector";
@@ -20,6 +20,8 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     * IT: Abstracts away the websocket subscriptions and exposes a dispatcher and a subscription state
     */
     const { state, dataset, delta, dispatch } = useSubscription();
+    const [asks, setAsks] = useState<Array<Feed>>([]);
+    const [bids, setBids] = useState<Array<Feed>>([]);
 
     /**
      * Column to be provided to the ladders, reversed where required
@@ -31,21 +33,21 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     ];
   
     let  contentArea;
-
-    const processData = (acc: Array<Feed>, curr: Array<number>, index: number): Array<Feed> => { 
-        if(curr.length >0) {
-            //todo update total with incrementals
-            acc.push({id: index, price:curr[0], size:curr[1], total: curr[0]});
-        }
-        return acc;    
-    }
     
-    const feed = (type: FeedType) => getFeed(type, dataset as CryptoFeed, delta as CryptoFeedDelta);
+
+    useEffect(() => {
+        const feed = (type: FeedType) => getFeed(type, dataset as CryptoFeed, delta as CryptoFeedDelta);
+        setAsks(feed("asks"));
+        setBids(feed("bids"));
+        console.log('here');
+     }, [dataset, delta, setAsks, setBids]);
     if(state.event === "subscribed" && dataset) {         
+
+
         contentArea = (
                 <div style={ladderStyle}>
-                   <Ladder data={feed("bids")} columns={[...columns]} />
-                   <Ladder data={feed("asks")} columns={columns.reverse()} />
+                   <Ladder data={bids as Array<Feed>} columns={[...columns]} />
+                   <Ladder data={asks as Array<Feed>} columns={columns.reverse()} />
                 </div>
         )
        
