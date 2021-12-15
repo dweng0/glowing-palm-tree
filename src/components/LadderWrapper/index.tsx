@@ -10,6 +10,7 @@ import { getFeed, getDelta } from "./services/feedcontroller";
 import { FeedType, CryptoFeed, CryptoFeedDelta } from "../../interface";
 import { content } from "../../constants/languages";
 import { Feed } from "../Ladder/interface";
+import { findAllByDisplayValue } from "@testing-library/react";
 
 /**
  * Container that handles the switching of feeds 
@@ -36,18 +37,18 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     
 
     useEffect(() => {
-        const feed = (type: FeedType) => getFeed(type, dataset as CryptoFeed, delta as CryptoFeedDelta);
-        setAsks(feed("asks"));
-        setBids(feed("bids"));
+        const feed = (type: FeedType, feed: Array<Feed>) => getFeed(type, feed, dataset as CryptoFeed, delta as CryptoFeedDelta);
+        setAsks(feed("asks", asks));
+        setBids(feed("bids", bids));
         console.log('here');
      }, [dataset, delta, setAsks, setBids]);
     if(state.event === "subscribed" && dataset) {         
 
-
+        const askColumns = [...columns];        
         contentArea = (
                 <div style={ladderStyle}>
-                   <Ladder data={bids as Array<Feed>} columns={[...columns]} />
-                   <Ladder data={asks as Array<Feed>} columns={columns.reverse()} />
+                   <Ladder data={bids as Array<Feed>} columns={columns.reverse()} />
+                   <Ladder data={asks as Array<Feed>} columns={askColumns} />
                 </div>
         )
        

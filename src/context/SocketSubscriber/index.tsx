@@ -24,7 +24,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 
     // setup message filter and buffer
     const { filter } = messageFilter(setDataset, setDelta)
-    const { buffer, clear } = bufferWriter<CryptoFeed>(filter, 2000);
+    const { buffer, clear } = bufferWriter<CryptoFeed>(filter, 1500);
 
     console.log('initial', dataset);
     console.log('delta', delta);
