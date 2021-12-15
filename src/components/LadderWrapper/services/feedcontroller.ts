@@ -1,22 +1,24 @@
 import { CryptoFeed, CryptoFeedDelta, FeedType } from "../../../interface";
 
-const getDataset = (feedType: FeedType, dataset: CryptoFeed): Array<Array<number>> => dataset[feedType] || [];
-const getDelta = (feedType: FeedType, delta: CryptoFeedDelta ): Array<Array<number>> => delta[feedType] || [];
+/**
+ * Returns the delta of a feed
+ * @param feedType 
+ * @param delta 
+ */
+export const getDelta = (feedType: FeedType, delta: CryptoFeedDelta | undefined ): Array<Array<number>> => (delta) ? delta[feedType] : [];
     
 /**
- * return bids or asks 
+ * returns the initial dataset
  * @param feedType 
  * @param dataset 
  * @param delta 
  */
-export const getFeed = (feedType: FeedType, dataset: CryptoFeed, delta: CryptoFeedDelta): Array<Array<number>> => {
+export const getFeed = (feedType: FeedType, dataset: CryptoFeed): Array<Array<number>> => {
     if(!dataset) {
         return [];
     }
 
-    if(!delta) { 
-        return getDataset(feedType, dataset);
-    }
-
-    return getDelta(feedType, delta);
+    return getDataset(feedType, dataset);
 }
+
+const getDataset = (feedType: FeedType, dataset: CryptoFeed): Array<Array<number>> => dataset[feedType] || [];

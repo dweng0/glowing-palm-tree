@@ -2,11 +2,12 @@ import React from "react";
 import Card from "@mui/material/Card";
 import { useSubscription} from "../../context/SocketSubscriber";
 import Typography from "@mui/material/Typography";
+import CircularProgress from '@mui/material/CircularProgress';
 import Selector from "../CurrencySelector";
-import { headStyle, ladderStyle } from "./style";
+import { headStyle, ladderStyle, loadingWrapperStyle } from "./style";
 import Ladder from "../Ladder";
-import { getFeed } from "./services/feedcontroller";
-import { FeedType, CryptoFeed, CryptoFeedDelta } from "../../interface";
+import { getFeed, getDelta } from "./services/feedcontroller";
+import { FeedType, CryptoFeed } from "../../interface";
 import { content } from "../../constants/languages";
 
 /**
@@ -23,26 +24,25 @@ const LadderWrapper: React.FunctionComponent = () =>  {
      * Column to be provided to the ladders, reversed where required
      */
     const columns = [
-        { id: 1, field: "Price", flex: 1 },
-        { id: 1, field: "Size", flex: 1 },
-        { id: 1, field: "Total", flex: 1 }
+        { field: "price", headerName: "Price", flex: 1 },
+        { field: "size", headername: "Size", flex: 1 },
+        { field: "total", headername: "Total",  flex: 1 }
     ];
   
     let  contentArea;
 
-    const feed = (type: FeedType) => getFeed(type, dataset as CryptoFeed, delta as CryptoFeedDelta);
+    const feed = (type: FeedType) => getFeed(type, dataset as CryptoFeed);
     if(state.event === "subscribed" && dataset) {         
         contentArea = (
                 <div style={ladderStyle}>
-                   <Ladder data={feed("bids")} columns={columns} />
-                   <Ladder data={feed("asks")} columns={columns.reverse()} />
+                   <Ladder data={feed("bids")} delta={getDelta("bids", delta)} columns={[...columns]} />
+                   <Ladder data={feed("asks")} delta={getDelta("asks", delta)} columns={columns.reverse()} />
                 </div>
         )
        
     } else  {
-        contentArea = <p>{content.en.loading}</p>
+       contentArea = <div style={loadingWrapperStyle}><CircularProgress color="success" /></div>   
     }
-    console.log(state);
 
     return (
         <div style={{paddingTop:"120px"}}>

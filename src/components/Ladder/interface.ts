@@ -9,5 +9,6 @@ export interface Feed {
 
 export interface LadderProps {
     columns: GridColDef[] ,
-    data:Array<Array<number>>
+    data:Array<Array<number>>,
+    delta: Array<Array<number>>
 }
