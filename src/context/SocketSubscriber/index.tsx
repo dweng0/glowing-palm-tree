@@ -1,5 +1,4 @@
 import React, { useContext, useReducer, useState, useEffect} from "react";
-import { SocketPayload } from "../WebSocket/interface";
 import { useWebSocket } from "../WebSocket";
 import { CryptoFeed, CryptoFeedDelta } from "../../interface";
 import { bufferWriter } from "./services/buffer";
@@ -7,6 +6,7 @@ import { SubscriptionProviderProps, SubscriptionContextReturnType } from "./inte
 import { subscribeReducer } from "./services/reducer";
 import { messageFilter } from "./services/messagefilter";
 import { getSocket } from "./services/socketfetcher";
+import { FLUSH_SPEED } from "../../constants/datalayer";
 
 // Create context privately
 const SubscriptionContext = React.createContext<SubscriptionContextReturnType | undefined>(undefined);
@@ -24,7 +24,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 
     // setup message filter and buffer
     const { filter } = messageFilter(setDataset, setDelta)
-    const { buffer, clear } = bufferWriter<CryptoFeed>(filter, 1500);
+    const { buffer, clear } = bufferWriter<CryptoFeed>(filter, FLUSH_SPEED);
 
     // IT: pushes socket messages into the buffer
     // WHEN: we have a socket.
