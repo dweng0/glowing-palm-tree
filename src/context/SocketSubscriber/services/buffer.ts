@@ -6,16 +6,15 @@ import { BufferInterface } from "../interface";
  * @param speed the speed at which flushing occurs
  * @throw {Error} if the buffer cannot be parsed.
  */
-export const bufferWriter = <T>(write: (data: T) => void, speed: number = 2000 ): BufferInterface => { 
+export const bufferWriter = <T>(filteredFlush: (buffer: Array<T>) => void, speed: number = 2000, ): BufferInterface => { 
 
-    // step 1. setup an empty set to write into
-    const buffer = new Set<string>();
+    // step 1. setup an empty array to write into
+    let buffer = new Array<T>()
 
-    // step 2. Flush the data captured into the write method provided
+    // step 2. Flush the data captured into the write method provided. Clear the buffer for the next feed
     const flush = () => {
-        for (const value of buffer)
-            write(JSON.parse(value as string) as T);
-        buffer.clear()
+        filteredFlush(buffer);
+        buffer = [];
     };
 
     // create our interval with speeds and do tidy up
@@ -34,6 +33,18 @@ export const bufferWriter = <T>(write: (data: T) => void, speed: number = 2000 )
         // then shutdown the interval
         resetInterval();
     }
+
+    const add = (message: string) => { 
+        if(message) {
+            try {
+                buffer.push(JSON.parse(message as string) as T);
+            } catch {
+                console.error("Failed to parse the last message, was it a string?");
+            }
+        } else {
+            console.error("socket message was empty!");
+        }
+    }
         
-    return { buffer, flush, clear }
+    return { add, flush, clear }
 }

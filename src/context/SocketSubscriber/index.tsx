@@ -23,17 +23,17 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
     const [dataset, setDataset] = useState();
 
     // setup message filter and buffer
-    const { filter } = messageFilter(setDataset, setDelta)
-    const { buffer, clear } = bufferWriter<CryptoFeed>(filter, FLUSH_SPEED);
+    const { filter } = messageFilter<CryptoFeed, CryptoFeedDelta>(setDataset, setDelta);
+    const { add, clear } = bufferWriter<CryptoFeed>(filter, FLUSH_SPEED);
 
     // IT: pushes socket messages into the buffer
     // WHEN: we have a socket.
     useEffect(() => { 
         if(socket) { 
-            socket.onmessage = (response: MessageEvent) =>  buffer.add(response.data);
+            socket.onmessage = (response: MessageEvent) => add(response.data);
         }
         return () => clear();
-    }, [socket, buffer, clear]);
+    }, [socket, add, clear]);
 
     // IT: Provides a reducer
     // FOR: Changing subscriptions/currencies

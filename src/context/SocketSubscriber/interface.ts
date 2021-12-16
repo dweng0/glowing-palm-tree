@@ -3,7 +3,7 @@ import { SocketPayload } from "../WebSocket/interface";
 import { CryptoFeed, CryptoFeedDelta } from "../../interface";
 
 export interface BufferInterface {
-    buffer: Set<string>,
+    add: (message: string) => void,
     flush: () => void,
     clear: () => void
 }

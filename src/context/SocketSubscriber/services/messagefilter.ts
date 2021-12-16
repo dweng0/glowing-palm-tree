@@ -1,27 +1,58 @@
+import { CryptoFeedDelta } from "../../../interface";
 
 /**
  * We need to filter the messages so that the correct data is passed back to the subscription provider. 
  * This method is a HOC that is called before the provided methods are called. piping messages to the correct
  * writer
  * 
- * @param data the raw data from the feed
  * @param initialWriter the writer to call if the inbound message is the initial dataset
  * @param deltaWriter  the writer to call if the inbound message is a delta dataset
  * @param eventWriter  @optional the writer to call if the message is an event
  */
-export const messageFilter = <I, D, E = void>(initialWriter: (value: I) => void, deltaWriter: (value: D) => void, eventWriter?: (data: E) => void) => { 
+export const messageFilter = <I, D>(initialWriter: (value: any) => void, deltaWriter: (value: any) => void) => { 
     
-    const filter = (data: any) => { 
-        if(data.event) { 
-            if(eventWriter) {
-                eventWriter(data as E);
+    /**
+    * @param bufferData the raw data from the feed
+    */
+    const filter = (bufferData: Array<any>) => { 
+        console.log('here');
+        //get the first message
+        const initialData = bufferData.find(item => item.numLevels !== undefined);
+        if(initialData) {
+            return initialWriter(initialData as I);
+        }
+    
+        //get the last message that had bids in it
+        const lastUpdatedBidsFeed: D | undefined 
+            = bufferData.reduceRight<D | undefined>((acc, item:any) => {
+                if(item.bids.length > 0 && acc === undefined  )  {
+                acc = item;
+                }
+                return acc;
+            }, undefined);
+    
+        // get the last message that had asks in it
+        const lastUpdatedAsksFeed: D | undefined
+             = bufferData.reduceRight<D | undefined>((acc, item:any) => {
+            if(item.asks.length > 0 && acc === undefined  )  {
+               acc = item;
             }
-        } else if(data.numLevels) {
-            initialWriter(data as I);
-        } else {
-            deltaWriter(data as D)
-        }        
+            return acc;
+        }, undefined);
+            
+        // found new bids and asks at different places, merge them
+        if(lastUpdatedBidsFeed !== undefined && lastUpdatedAsksFeed !== undefined)  {
+            const asksFeed = lastUpdatedAsksFeed as unknown as CryptoFeedDelta;
+            deltaWriter({...lastUpdatedBidsFeed, ...{asks: asksFeed.asks}} as D);
+        // only found bids
+        } else if(lastUpdatedBidsFeed !== undefined) {
+            deltaWriter({...lastUpdatedBidsFeed} as D);
+        // only found asks
+        } else if(lastUpdatedAsksFeed !== undefined) {
+            deltaWriter({...lastUpdatedAsksFeed} as D);
+        }
     }
+    
 
     return { filter }
 }

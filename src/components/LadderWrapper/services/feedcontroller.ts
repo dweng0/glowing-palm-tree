@@ -39,7 +39,7 @@ export const getFeed = (tickSize: number, feedType: FeedType, feed:Array<Feed>, 
     return getDataset(feedType, dataset)
         .reduce(transformFeed, [])
         .reduce(applyDelta(delta[feedType], feed), [])
-        .sort(bySizeDesc)
+        .sort(byPrice)
         .reduce(groupBy(tickSize, delta[feedType].length), [])
         .map(accumulateTotal);        
 }
@@ -63,25 +63,54 @@ const accumulateTotal = (item: Feed, index: number, array: Array<Feed>) => {
 
 const bySizeDesc = (compA: Feed, compB: Feed) => compA.size - compB.size;
 
-// HOC returned reducer to group up the Feeds by the requested ticksize
+const byPrice = (compA: Feed, compB: Feed) => compB.price - compA.price;
+
+/**
+ * Steps:
+ * - modulo check to see if price falls into a ticksize grouping. push to accumulator
+ *      - Price is lowered into next available group if it does not match grouping already
+ * - see if price point already exists in accumulator, update it if it does else
+ *      - push onto array if it does not.
+ * 
+ * - return accumulator for next iteration
+ * @param tickSize 
+ * @param feedLength 
+ */
 const groupBy = (tickSize: number, feedLength: number) => {
-    console.log('using ticksize ', tickSize)
     return (acc: Array<Feed>, curr: Feed, index: number): Array<Feed> => {
-        debugger;
-        // check it fits into our grouping
-        if((curr.size % tickSize) === 0) {
+     
+    
+        /**
+        * Find the next lowest group price level
+        */
+        while(curr.price > 0 && (curr.price % tickSize) !== 0) {
+            curr.price = curr.price - 0.5;
+        }
+
+        /**
+        * Does this price already exist in the array?
+        */
+        let matchingData: {priceLevel: Feed | undefined, index: number | undefined} = {
+            priceLevel: undefined,
+            index: undefined
+        };
+        acc.forEach((previous, index) => {
+            if(previous.price === curr.price) {
+                previous.size = (previous.size +  curr.size);
+                previous.total = curr.total;
+                matchingData.priceLevel = previous;
+                matchingData.index = index;
+            }
+        });
+
+        /**
+         * If so, splice new values into accumulator, otherwise push the new price point into the accumulator
+         */
+        if(matchingData.priceLevel !== undefined && matchingData.index !== undefined) { 
+            acc.splice(matchingData.index, 1, matchingData.priceLevel);
+        } else {
             acc.push(curr);
-        } else if(acc.length === 0) { 
-            acc.push(curr)
-        } else { 
-            /**
-            * If not add the details of the current level to the previous
-            */
-            const previous = acc[acc.length - 1];
-            debugger;
-            previous.size = (previous.size +  curr.size);
-            previous.total = curr.total;
-        }      
+        }
 
         return acc;
     }
