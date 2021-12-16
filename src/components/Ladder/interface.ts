@@ -9,5 +9,6 @@ export interface Feed {
 
 export interface LadderProps {
     columns: GridColDef[],
-    data:Array<Feed>
+    data:Array<Feed>,
+    priceColour: "red" | "green"
 }

@@ -6,7 +6,7 @@ const Ladder:React.FunctionComponent<LadderProps> = ({ columns, data}) => {
 
     return (
         <div style={{ height: "100vh", width:"calc(50% - 24px)", margin:"12px", minWidth: "350px", justifyContent: "center" as "center"}}>
-            <DataGrid style={{width:"100%"}} rows={data} columns={columns} hideFooterPagination={true} hideFooter={true} />
+            <DataGrid rowHeight={35} style={{width:"100%"}} rows={data} columns={columns} hideFooterPagination={true} hideFooter={true} />
         </div>
     );
 }

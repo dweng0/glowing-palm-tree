@@ -11,6 +11,7 @@ import { getFeed, getDelta } from "./services/feedcontroller";
 import { FeedType, CryptoFeed, CryptoFeedDelta } from "../../interface";
 import { content } from "../../constants/languages";
 import { Feed } from "../Ladder/interface";
+import { getColumns } from "./services/columns";
 
 /**
  * Container that handles the switching of feeds 
@@ -25,15 +26,6 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     const [bids, setBids] = useState<Array<Feed>>([]);
     const [spread, setSpread] = useState<number>();
     const [tickSize, setTickSize] = useState<number>(0.5);
-
-    /**
-     * Column to be provided to the ladders, reversed where required
-     */
-    const columns = [
-        { field: "price", headerName: "Price", flex: 1 },
-        { field: "size", headername: "Size", flex: 1 },
-        { field: "total", headername: "Total",  flex: 1 }
-    ];
 
     let  contentArea;    
 
@@ -59,12 +51,11 @@ const LadderWrapper: React.FunctionComponent = () =>  {
      }
 
     if(state.event === "subscribed" && dataset) {         
-
-        const askColumns = [...columns];        
+ 
         contentArea = (
                 <div style={ladderStyle}>
-                   <Ladder data={bids as Array<Feed>} columns={columns.reverse()} />
-                   <Ladder data={asks as Array<Feed>} columns={askColumns} />
+                   <Ladder priceColour={"green"} data={bids as Array<Feed>} columns={getColumns("bids")} />
+                   <Ladder priceColour={"red"} data={asks as Array<Feed>} columns={getColumns("asks")} />
                 </div>
         )
        
