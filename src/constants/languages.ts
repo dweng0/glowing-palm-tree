@@ -15,7 +15,9 @@ export const content = {
             }
         },
         orderbook: {
-            spread: "Spread"
+            spread: "Spread",
+            currency: "Currency",
+            group: "Group"
         }
     }
 }

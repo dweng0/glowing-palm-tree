@@ -1,2 +1,2 @@
 
-export const root = {minWidth: "300px"}
+export const root = {minWidth: "150px"}

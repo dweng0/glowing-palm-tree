@@ -50,8 +50,8 @@ export const getFeed = (feedType: FeedType, feed:Array<Feed>, dataset: CryptoFee
     return getDataset(feedType, dataset)
         .reduce(transformFeed, [])
         .reduce(applyDelta, [])
-        .sort(bySize)
-        .map(accumulateTotal)
+        .sort(byPrice)
+        .map(accumulateTotal);
         
 }
 
@@ -73,5 +73,6 @@ const accumulateTotal = (item: Feed, index: number, array: Array<Feed>) => {
 }
 
 const bySize = (compA: Feed, compB: Feed) => compB.size - compA.size;
+const byPrice = (compA: Feed, compB: Feed) => compB.price - compA.price;
 
 const getDataset = (feedType: FeedType, dataset: CryptoFeed): Array<Array<number>> => dataset[feedType] || [];

@@ -1,4 +1,4 @@
 export interface SelectorProps { 
-    currentSelection: string,
+    currentSelection: number,
     onSelect: (event:any) => void
 }

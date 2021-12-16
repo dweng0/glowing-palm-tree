@@ -26,9 +26,6 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
     const { filter } = messageFilter(setDataset, setDelta)
     const { buffer, clear } = bufferWriter<CryptoFeed>(filter, 1500);
 
-    console.log('initial', dataset);
-    console.log('delta', delta);
-
     // IT: pushes socket messages into the buffer
     // WHEN: we have a socket.
     useEffect(() => { 
@@ -58,6 +55,8 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
         case "unsubscribe":
             getSocket(socket).then(websocket => websocket.send(JSON.stringify(socketState)));            
             break;
+        case "subscribed":
+            break;            
         case "togglefeed": 
             // unsub
             const previousFeed = (socketState.product_ids[0] === "PI_XBTUSD") ? ["PI_ETHUSD"] : ["PI_XBTUSD"];

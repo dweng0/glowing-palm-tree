@@ -1,0 +1,1 @@
+export const root = {minWidth: "150px", marginLeft: "8px"}

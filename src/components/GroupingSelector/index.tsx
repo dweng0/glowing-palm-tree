@@ -6,25 +6,26 @@ import MenuItem from "@mui/material/MenuItem";
 import { SelectorProps } from "./interface";
 import {root} from "./style";
 import { content } from "../../constants/languages";
+
 const Selector:React.FunctionComponent<SelectorProps> = ({currentSelection, onSelect}) => { 
-    const currencies: Array<string> = ["PI_XBTUSD", "PI_ETHUSD"];
+    const tickSizes: Array<number> = [0.5, 1, 2.5];
     const { orderbook } = content.en;
+
     return (
         <div style={root}>
             <FormControl fullWidth>
-                <InputLabel id="label">{orderbook.currency}</InputLabel>
+                <InputLabel id="tickLabel">{orderbook.group}</InputLabel>
                 <Select
-                    labelId="label"
-                    id="ccyselect"
+                    labelId="tickLabel"
+                    id="tickselector"
                     value={currentSelection}
                     label="label"
                     onChange={onSelect}
                     >
-                    {currencies.map((item, index) => <MenuItem value={item} key={index}>{item}</MenuItem>)}
+                    {tickSizes.map((item, index) => <MenuItem value={item} key={index}>{item}</MenuItem>)}
                 </Select>
             </FormControl>
-        </div>
-        
+        </div>        
     )
 }
 
