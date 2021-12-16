@@ -15,7 +15,11 @@ export const messageFilter = <I, D>(initialWriter: (value: any) => void, deltaWr
     * @param bufferData the raw data from the feed
     */
     const filter = (bufferData: Array<any>) => { 
-        console.log('here');
+       
+        if(bufferData.length === 0) {
+            return;
+        }
+        
         //get the first message
         const initialData = bufferData.find(item => item.numLevels !== undefined);
         if(initialData) {
@@ -25,7 +29,7 @@ export const messageFilter = <I, D>(initialWriter: (value: any) => void, deltaWr
         //get the last message that had bids in it
         const lastUpdatedBidsFeed: D | undefined 
             = bufferData.reduceRight<D | undefined>((acc, item:any) => {
-                if(item.bids.length > 0 && acc === undefined  )  {
+                if(item.bids !== undefined && item.bids.length > 0 && acc === undefined  )  {
                 acc = item;
                 }
                 return acc;
@@ -34,7 +38,7 @@ export const messageFilter = <I, D>(initialWriter: (value: any) => void, deltaWr
         // get the last message that had asks in it
         const lastUpdatedAsksFeed: D | undefined
              = bufferData.reduceRight<D | undefined>((acc, item:any) => {
-            if(item.asks.length > 0 && acc === undefined  )  {
+            if(item.asks !== undefined && item.asks.length > 0 && acc === undefined  )  {
                acc = item;
             }
             return acc;
