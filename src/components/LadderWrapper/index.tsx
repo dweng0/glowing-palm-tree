@@ -30,7 +30,7 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     let  contentArea;    
 
     useEffect(() => {
-        const feed = (type: FeedType, feed: Array<Feed>) => getFeed(type, feed, dataset as CryptoFeed, delta as CryptoFeedDelta);
+        const feed = (type: FeedType, feed: Array<Feed>) => getFeed(tickSize, type, feed, dataset as CryptoFeed, delta as CryptoFeedDelta);
         setAsks(feed("asks", asks));
         setBids(feed("bids", bids));
         if(bids.length > 0 && asks.length > 0) {
