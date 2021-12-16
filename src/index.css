@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.flash-once { 
+    animation: flash 0.7s infinite;
+    animation-iteration-count: 1;
+}
+
+@keyframes flash {
+    from { background: inherit }
+    50% { background: gray; }
+    to { background: inherit  }
+  }
