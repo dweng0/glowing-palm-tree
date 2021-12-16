@@ -61,7 +61,27 @@ const accumulateTotal = (item: Feed, index: number, array: Array<Feed>) => {
     return current;
 }
 
-const bySizeDesc = (compA: Feed, compB: Feed) => compA.size - compB.size;
+/**
+ * Floating points cause rounding errors when working at high persision, this method adds percision
+ * {@see https://stackoverflow.com/questions/3966484/why-does-modulus-operator-return-fractional-number-in-javascript }
+ * @param val 
+ * @param step 
+ */
+const floatSafeModulus = (val: number, step: number) => {
+    // take the decimal counts
+    const valDecCount = (val.toString().split('.')[1] || '').length;
+    const stepDecCount = (step.toString().split('.')[1] || '').length;
+
+    // determine the decimal count to use when parsing into an int
+    const decCount = valDecCount > stepDecCount ? valDecCount : stepDecCount;
+
+    // parse the values back 
+    const valInt = parseInt(val.toFixed(decCount).replace('.', ''));
+    const stepInt = parseInt(step.toFixed(decCount).replace('.', ''));
+
+    // MOD / decimal count ^ 10
+    return (valInt % stepInt) / Math.pow(10, decCount);
+  }
 
 const byPrice = (compA: Feed, compB: Feed) => compB.price - compA.price;
 
@@ -79,12 +99,15 @@ const byPrice = (compA: Feed, compB: Feed) => compB.price - compA.price;
 const groupBy = (tickSize: number, feedLength: number) => {
     return (acc: Array<Feed>, curr: Feed, index: number): Array<Feed> => {
      
-    
+        const rightSideofDecimal = curr.price.toString().split(".")[1];
+        const reducedTickSize = (rightSideofDecimal && rightSideofDecimal.length === 2 && tickSize === 0.5);
+        const tick = (reducedTickSize && tickSize === 0.5) ? 0.05 : tickSize;
+        const modulo = (val: number, step: number) => tick === 0.05 ? floatSafeModulus(val, step) : (val % step);
         /**
         * Find the next lowest group price level
         */
-        while(curr.price > 0 && (curr.price % tickSize) !== 0) {
-            curr.price = curr.price - 0.5;
+        while(curr.price > 0.05 && modulo(curr.price, tick) !== 0) {
+            curr.price = parseFloat((curr.price - 0.05).toFixed(2));
         }
 
         /**

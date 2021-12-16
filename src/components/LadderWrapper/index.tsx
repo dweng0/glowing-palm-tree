@@ -7,7 +7,7 @@ import CurrencySelector from "../CurrencySelector";
 import TickSelector from "../GroupingSelector";
 import { headStyle, ladderStyle, loadingWrapperStyle } from "./style";
 import Ladder from "../Ladder";
-import { getFeed, getDelta } from "./services/feedcontroller";
+import { getFeed } from "./services/feedcontroller";
 import { FeedType, CryptoFeed, CryptoFeedDelta } from "../../interface";
 import { content } from "../../constants/languages";
 import { Feed } from "../Ladder/interface";

@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Feed, LadderProps } from "./interface";
+import { LadderProps } from "./interface";
  
 const Ladder:React.FunctionComponent<LadderProps> = ({ columns, data}) => {
 

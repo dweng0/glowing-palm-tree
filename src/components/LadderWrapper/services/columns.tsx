@@ -8,6 +8,7 @@ const getPriceField = (color: "red" | "green") => {
         flex: 1, 
         renderCell: (params: GridRenderCellParams<number>) => (
         <span style={{color: (color === "red") ? "tomato" : "#04AA6D"}}>
+            {console.log(params)}
             {(params.value).toLocaleString("en", {style: "currency", currency: "USD", minimumFractionDigits: 2})}
         </span>
     )}
