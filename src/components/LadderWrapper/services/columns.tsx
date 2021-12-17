@@ -1,6 +1,10 @@
-import { FeedType } from "../../../interface";
+import { FeedType }                         from "../../../interface";
 import { GridRenderCellParams, GridColDef } from "@mui/x-data-grid";
 
+
+/**
+ * Focus: cell decoration for price field
+ */
 const getPriceField = (color: "red" | "green") => { 
     return { 
         field: "price", 
@@ -34,9 +38,12 @@ const columns = [
 ];
 
 const rightAlignedProperties = {align: "right" as "right", headerAlign: "right" as "right"};
-
 const rightAligned = () => columns.map(item => ({...item, ...rightAlignedProperties}));
 
+/**
+ * IT: gets columns for Bids or asks depending on arg
+ * @param feedType 
+ */
 export const getColumns = (feedType: FeedType): Array<GridColDef> => { 
     switch (feedType) { 
         case "asks": 

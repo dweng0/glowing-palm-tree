@@ -1,7 +1,10 @@
-import AppBar from "./index";
-import SocketContextProvider from "../../context/WebSocket";
-import {render} from "@testing-library/react";
+import AppBar                   from "./index";
+import SocketContextProvider    from "../../context/WebSocket";
+import {render}                 from "@testing-library/react";
 
+/**
+ * Tests for AppBar Component
+ */
 describe("Testing AppBar", () => { 
     it("Should compile at runtime", () => expect(<AppBar title="test"/>).toBeDefined());
 

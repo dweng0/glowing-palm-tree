@@ -2,12 +2,30 @@ import { CryptoFeed, CryptoFeedDelta, FeedType } from "../../../interface";
 import { Feed } from "../../Ladder/interface";
 
 /**
+ * Returns an object that exposes getFeed for consumption.
+ * @param tickSize  The ticksize that levels should be grouped by
+ * @param type      Type of feed (bid or ask)
+ * @param feed      Feed data
+ * @param dataset   Base dataset
+ * @param delta     The provided delta
+ */
+export const feedBuilder = (tickSize: number, bids: Array<Feed>, asks: Array<Feed>,  dataset: CryptoFeed, delta: CryptoFeedDelta) => {
+
+    const getFeed = (type: "bids" | "asks") => {
+        let localFeed = (type === "bids") ? bids : asks;
+        return buildFeed(tickSize, type, localFeed, dataset as CryptoFeed, delta as CryptoFeedDelta);
+    }
+    
+    return { getFeed }
+}
+
+/**
  * Returns the delta of a feed
  * @param feedType 
  * @param delta 
  */
 export const getDelta = (feedType: FeedType, delta: CryptoFeedDelta | undefined ): Array<Array<number>> => (delta) ? delta[feedType] : [];
-    
+
 /**
  * Returns a feed based on data provided to it
  * @param tickSize  The tick size that levels should be grouped by
@@ -15,7 +33,7 @@ export const getDelta = (feedType: FeedType, delta: CryptoFeedDelta | undefined 
  * @param dataset   The base data set
  * @param delta     The new delta 
  */
-export const getFeed = (tickSize: number, feedType: FeedType, feed:Array<Feed>, dataset: CryptoFeed, delta: CryptoFeedDelta): Array<Feed> => {
+export const buildFeed = (tickSize: number, feedType: FeedType, feed:Array<Feed>, dataset: CryptoFeed, delta: CryptoFeedDelta): Array<Feed> => {
 
     // no dataset? return an empty array
     if(!dataset) {
@@ -99,10 +117,11 @@ const byPrice = (compA: Feed, compB: Feed) => compB.price - compA.price;
 const groupBy = (tickSize: number, feedLength: number) => {
     return (acc: Array<Feed>, curr: Feed, index: number): Array<Feed> => {
      
-        const rightSideofDecimal = curr.price.toString().split(".")[1];
-        const reducedTickSize = (rightSideofDecimal && rightSideofDecimal.length === 2 && tickSize === 0.5);
-        const tick = (reducedTickSize && tickSize === 0.5) ? 0.05 : tickSize;
-        const modulo = (val: number, step: number) => tick === 0.05 ? floatSafeModulus(val, step) : (val % step);
+        const rightSideofDecimal    = curr.price.toString().split(".")[1];
+        const reducedTickSize       = (rightSideofDecimal && rightSideofDecimal.length === 2 && tickSize === 0.5);
+        const tick                  = (reducedTickSize && tickSize === 0.5) ? 0.05 : tickSize;
+        const modulo                = (val: number, step: number) => tick === 0.05 ? floatSafeModulus(val, step) : (val % step);
+
         /**
         * Find the next lowest group price level
         */

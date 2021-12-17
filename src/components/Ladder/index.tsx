@@ -1,7 +1,14 @@
-import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { LadderProps } from "./interface";
+import React            from 'react';
+import { DataGrid }     from '@mui/x-data-grid';
+import { LadderProps }  from "./interface";
  
+/**
+ * Ladder Component
+ * IT: Renders a datagrid
+ * CHILD OF: {@see LadderWwrapper }
+ * @param columns  The columns to render
+ * @param data     The data to fill the datagrid up with
+ */
 const Ladder:React.FunctionComponent<LadderProps> = ({ columns, data}) => {
 
     return (

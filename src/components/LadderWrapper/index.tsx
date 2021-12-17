@@ -1,46 +1,64 @@
-import React, { useState, useEffect } from "react";
-import Card from "@mui/material/Card";
-import { useSubscription } from "../../context/SocketSubscriber";
-import Typography from "@mui/material/Typography";
-import CircularProgress from '@mui/material/CircularProgress';
-import CurrencySelector from "../CurrencySelector";
-import TickSelector from "../GroupingSelector";
-import { headStyle, ladderStyle, loadingWrapperStyle } from "./style";
-import Ladder from "../Ladder";
-import { getFeed } from "./services/feedcontroller";
-import { FeedType, CryptoFeed, CryptoFeedDelta } from "../../interface";
-import { content } from "../../constants/languages";
-import { Feed } from "../Ladder/interface";
-import { getColumns } from "./services/columns";
+import React, { useState, useEffect }                   from "react";
+import { headStyle, ladderStyle, loadingWrapperStyle }  from "./style";
+import { CryptoFeed, CryptoFeedDelta }                  from "../../interface";
+
+import Card                 from "@mui/material/Card";
+import { useSubscription }  from "../../context/SocketSubscriber";
+import Typography           from "@mui/material/Typography";
+import CircularProgress     from '@mui/material/CircularProgress';
+import CurrencySelector     from "../CurrencySelector";
+import TickSelector         from "../GroupingSelector";
+import Ladder               from "../Ladder";
+import { feedBuilder }      from "./services/feedcontroller";
+import { content }          from "../../constants/languages";
+import { Feed }             from "../Ladder/interface";
+import { getColumns }       from "./services/columns";
 
 /**
- * Container that handles the switching of feeds 
+ *  IT: handles data processing and feeds presentational components with required data
  */
 const LadderWrapper: React.FunctionComponent = () =>  {
 
     /**
-    * IT: Abstracts away the websocket subscriptions and exposes a dispatcher and a subscription state
+    * IT: Abstracts away the websocket subscriptions and exposes a dispatcher, feed data and socket state
     */
     const { state, dataset, delta, dispatch } = useSubscription();
-    const [asks, setAsks] = useState<Array<Feed>>([]);
-    const [bids, setBids] = useState<Array<Feed>>([]);
-    const [spread, setSpread] = useState<number>();
-    const [tickSize, setTickSize] = useState<number>(0.5);
+    
+    /**
+     * Hold presentational state
+     */
+    const [asks, setAsks]           = useState<Array<Feed>>([]);
+    const [bids, setBids]           = useState<Array<Feed>>([]);
+    const [spread, setSpread]       = useState<number>();
+    const [tickSize, setTickSize]   = useState<number>(0.5);
 
-    let  contentArea;    
+    /**
+     * Sets up a feed builder based on the state provided
+     */
+    const { getFeed } = feedBuilder(tickSize, bids, asks, dataset as CryptoFeed, delta as CryptoFeedDelta); 
 
+    /**
+     * IT:      builds a Feed that the datagrid can consume from the Websocket data (Crypto feed) 
+     * WHEN:    The Delta changes
+     */
     useEffect(() => {
-        const feed = (type: FeedType, feed: Array<Feed>) => getFeed(tickSize, type, feed, dataset as CryptoFeed, delta as CryptoFeedDelta);
-        setAsks(feed("asks", asks));
-        setBids(feed("bids", bids));
+        setAsks(getFeed("asks"));
+        setBids(getFeed("bids"));
+     }, [getFeed, setAsks, setBids]);
+
+     /**
+      * IT:     Updates spread data
+      * WHEN:   Bids/Asks feed change
+      */
+     useEffect(() => { 
         if(bids.length > 0 && asks.length > 0) {
             setSpread(Math.abs(bids[0].price - asks[0].price));
         } else { 
             setSpread(0);
         }
-                
-     }, [dataset, delta, setAsks, setBids]);
+     }, [bids, asks, setSpread]);
 
+     // Handle rendering spread details
      const getSpreadAsPercentageofBook = () => { 
          let content = null;
          if(spread && bids.length && asks.length) {
@@ -50,6 +68,13 @@ const LadderWrapper: React.FunctionComponent = () =>  {
          return content;
      }
 
+    let  contentArea;    
+
+    /**
+     * IT:          Renders the ladders 
+     * WHEN:        The socket state is set to "subscribed"
+     * OTHERWISE:   it shows a loading spinner
+     */
     if(state.event === "subscribed" && dataset) {         
  
         contentArea = (

@@ -1,4 +1,8 @@
 import CurrencySelector from "./index";
+
+/**
+ * Tests for the CurrencySelector component
+ */
 describe("Tests for currency selector", () => { 
     it("should compile at runtime", () => { 
         expect(CurrencySelector).toBeDefined();

@@ -1,11 +1,19 @@
-import React from "react";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import { SelectorProps } from "./interface";
-import {root} from "./style";
-import { content } from "../../constants/languages";
+import React            from "react";
+import InputLabel       from "@mui/material/InputLabel";
+import FormControl      from "@mui/material/FormControl";
+import Select           from "@mui/material/Select";
+import MenuItem         from "@mui/material/MenuItem";
+import { SelectorProps} from "./interface";
+import {root}           from "./style";
+import { content }      from "../../constants/languages";
+
+/**
+* Currency Selector component, 
+* IT: Displays Available currencies that a users can select
+* CHILD OF: {@see LadderWwrapper }
+* @param CurrentSelection  The current selection
+* @param onSelect          The method to call when a selection is made
+*/
 const Selector:React.FunctionComponent<SelectorProps> = ({currentSelection, onSelect}) => { 
     const currencies: Array<string> = ["PI_XBTUSD", "PI_ETHUSD"];
     const { orderbook } = content.en;

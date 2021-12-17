@@ -1,20 +1,20 @@
-import React from "react";
-import CloudOffOutlinedIcon from "@mui/icons-material/CloudOffOutlined";
-import CloudDoneOutlinedIcon from "@mui/icons-material/CloudDoneOutlined";
-import CloudSyncOutlinedIcon from "@mui/icons-material/CloudSyncOutlined";
-import CloudOutlinedIcon from "@mui/icons-material/CloudOutlined";
-import Stack from "@mui/material/Stack";
-import { content } from "../../../constants/languages"
-import {useWebSocket} from "../../../context/WebSocket";
-import {wrapperStyle} from "./style";
-import StatusBarBag from "../presentation/statusbaricon";
-import {StatusBarBadgeProps} from "../presentation/interface";
-import SocketSwitch from "../presentation/socketswitch";
-
+import React                    from "react";
+import CloudOffOutlinedIcon     from "@mui/icons-material/CloudOffOutlined";
+import CloudDoneOutlinedIcon    from "@mui/icons-material/CloudDoneOutlined";
+import CloudSyncOutlinedIcon    from "@mui/icons-material/CloudSyncOutlined";
+import CloudOutlinedIcon        from "@mui/icons-material/CloudOutlined";
+import Stack                    from "@mui/material/Stack";
+import { content }              from "../../../constants/languages"
+import {useWebSocket}           from "../../../context/WebSocket";
+import {wrapperStyle}           from "./style";
+import StatusBarBag             from "../presentation/statusbaricon";
+import {StatusBarBadgeProps}    from "../presentation/interface";
+import SocketSwitch             from "../presentation/socketswitch";
 
 /**
- * A component that shows the state of the websocket
+ * Component that shows the state of the websocket
  * Have added the disconnect button here, but it could be added anywhere thanks to the Contextual IOC pattern being used in this application
+ * IT: reads socket state and shows an icon based on this
  */
 const StatusBarContainer: React.FunctionComponent = () => {
 
