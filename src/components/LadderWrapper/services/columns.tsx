@@ -4,6 +4,8 @@ import { GridRenderCellParams, GridColDef } from "@mui/x-data-grid";
 
 /**
  * Focus: cell decoration for price field
+ * MUI data grid has exposed events that are not documented, so to get it to flash like a ticker we need to tweak the render
+ * (next time I'll stick with aggrid!)
  */
 const getPriceField = (color: "red" | "green") => { 
     return { 
@@ -11,8 +13,7 @@ const getPriceField = (color: "red" | "green") => {
         headerName: "Price", 
         flex: 1, 
         renderCell: (params: GridRenderCellParams<number>) => (
-        <span style={{color: (color === "red") ? "tomato" : "#04AA6D"}}>
-            {console.log(params)}
+        <span  id={`row-item-${params.id}`} style={{color: (color === "red") ? "tomato" : "#04AA6D"}}>      
             {(params.value).toLocaleString("en", {style: "currency", currency: "USD", minimumFractionDigits: 2})}
         </span>
     )}

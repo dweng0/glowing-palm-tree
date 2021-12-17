@@ -13,7 +13,7 @@ code {
 }
 
 .flash-once { 
-    animation: flash 0.7s infinite;
+    animation: flash 0.3s infinite;
     animation-iteration-count: 1;
 }
 
