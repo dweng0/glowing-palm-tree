@@ -1,6 +1,6 @@
 import React, { useState, useEffect }                   from "react";
 import { headStyle, ladderStyle, loadingWrapperStyle }  from "./style";
-import { CryptoFeed, CryptoFeedDelta }                  from "../../interface";
+import { FeedType, CryptoFeed, CryptoFeedDelta }        from "../../interface";
 
 import Card                 from "@mui/material/Card";
 import { useSubscription }  from "../../context/SocketSubscriber";
@@ -9,7 +9,7 @@ import CircularProgress     from '@mui/material/CircularProgress';
 import CurrencySelector     from "../CurrencySelector";
 import TickSelector         from "../GroupingSelector";
 import Ladder               from "../Ladder";
-import { feedBuilder }      from "./services/feedcontroller";
+import { buildFeed }        from "./services/feedcontroller";
 import { content }          from "../../constants/languages";
 import { Feed }             from "../Ladder/interface";
 import { getColumns }       from "./services/columns";
@@ -33,30 +33,15 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     const [tickSize, setTickSize]   = useState<number>(0.5);
 
     /**
-     * Sets up a feed builder based on the state provided
-     */
-    const { getFeed } = feedBuilder(tickSize, bids, asks, dataset as CryptoFeed, delta as CryptoFeedDelta); 
-
-    /**
      * IT:      builds a Feed that the datagrid can consume from the Websocket data (Crypto feed) 
      * WHEN:    The Delta changes
      */
     useEffect(() => {
-        setAsks(getFeed("asks"));
-        setBids(getFeed("bids"));
-     }, [getFeed, setAsks, setBids]);
-
-     /**
-      * IT:     Updates spread data
-      * WHEN:   Bids/Asks feed change
-      */
-     useEffect(() => { 
-        if(bids.length > 0 && asks.length > 0) {
-            setSpread(Math.abs(bids[0].price - asks[0].price));
-        } else { 
-            setSpread(0);
-        }
-     }, [bids, asks, setSpread]);
+        const feed = (type: FeedType, feed: Array<Feed>) => buildFeed(tickSize, type, feed, dataset as CryptoFeed, delta as CryptoFeedDelta);
+        setAsks(previousAsks => feed("asks", previousAsks));
+        setBids(previousBids => feed("bids", previousBids));                
+     }, [dataset, delta, setAsks, setBids, tickSize]);
+     
 
      // Handle rendering spread details
      const getSpreadAsPercentageofBook = () => { 
