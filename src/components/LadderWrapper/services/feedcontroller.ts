@@ -21,8 +21,11 @@ export const buildFeed = (tickSize: number, feedType: FeedType, feed:Array<Feed>
             .reduce(transformFeed, []);
     }
 
+    // filter out the deltas we find, any remaining ones are new and can be added in
+    const filteredDelta = [...delta[feedType]];
+
     /**
-     * return the dataset:
+     * Pipeline that returns the dataset:
      * - Transformed into a Feed array { @See Feed } for the datagrid to consume
      * - Apply deltas {@see CryptoFeedDelta },
      * - Group by tickSize
@@ -31,9 +34,9 @@ export const buildFeed = (tickSize: number, feedType: FeedType, feed:Array<Feed>
      */ 
     return getDataset(feedType, dataset)
         .reduce(transformFeed, [])
-        .reduce(applyDelta(delta[feedType], feed), [])
+        .reduce(applyDelta(filteredDelta, feed), [])
         .sort(byPrice)
-        .reduce(groupBy(tickSize, delta[feedType].length), [])
+        .reduce(groupBy(tickSize, filteredDelta.length), [])
         .map(sumTotals);        
 }
 
@@ -130,10 +133,11 @@ const groupBy = (tickSize: number, feedLength: number) => {
 
         return acc;
     }
-} 
+}
 
 const  applyDelta = (delta: Array<[number, number]>, feed: Array<Feed>) =>(acc: Array<Feed>, curr: Feed, index: number, array: Array<Feed>): Array<Feed>  => {
-        
+    
+    //issue here where the new delta will not be added if it doesn't exist on the initial dataset
     const rawData = delta.find(item => item[0] === curr.price);
     const previousFeedData = feed.find(item => item.price === curr.price);
     

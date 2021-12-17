@@ -61,16 +61,18 @@ describe( "Returning datasets", () => {
         expect(buildFeed(tickSize, feedType, feed, mockDataSet, delta).length).toBe(25);  
     });
     
-    it("should return the dataset, Should add new price to dataset", () => { 
+    it("Should remove a price if the size in the delta is zero", () => { 
         //setup
         const feed: Array<Feed> = [];
         const tickSize = 0.5, feedType = "bids";
 
         //One new update to bids
-        const delta: CryptoFeedDelta = {"feed":"book_ui_1","product_id":"PI_XBTUSD","bids":[[8500.0,115018.0], [323123.0,115018.0]],"asks":[]};
-
+        const delta: CryptoFeedDelta = {"feed":"book_ui_1","product_id":"PI_XBTUSD","bids":[47172.0,0],"asks":[]};
+        const results = buildFeed(tickSize, feedType, feed, mockDataSet, delta);
         //execute
         //verify
-        expect(buildFeed(tickSize, feedType, feed, mockDataSet, delta).length).toBe(26);  
+        expect(results).toBe(24);  
     });
-})
+
+    //should add the price
+});
