@@ -2,31 +2,6 @@ import { CryptoFeed, CryptoFeedDelta, FeedType } from "../../../interface";
 import { Feed } from "../../Ladder/interface";
 
 /**
- * Returns an object that exposes getFeed for consumption.
- * @param tickSize  The ticksize that levels should be grouped by
- * @param type      Type of feed (bid or ask)
- * @param feed      Feed data
- * @param dataset   Base dataset
- * @param delta     The provided delta
- */
-export const feedBuilder = (tickSize: number, bids: Array<Feed>, asks: Array<Feed>,  dataset: CryptoFeed, delta: CryptoFeedDelta) => {
-
-    const getFeed = (type: "bids" | "asks") => {
-        let localFeed = (type === "bids") ? bids : asks;
-        return buildFeed(tickSize, type, localFeed, dataset as CryptoFeed, delta as CryptoFeedDelta);
-    }
-    
-    return { getFeed }
-}
-
-/**
- * Returns the delta of a feed
- * @param feedType 
- * @param delta 
- */
-export const getDelta = (feedType: FeedType, delta: CryptoFeedDelta | undefined ): Array<Array<number>> => (delta) ? delta[feedType] : [];
-
-/**
  * Returns a feed based on data provided to it
  * @param tickSize  The tick size that levels should be grouped by
  * @param feedType  The type of feed (bid or ask)
@@ -171,11 +146,14 @@ const  applyDelta = (delta: Array<[number, number]>, feed: Array<Feed>) =>(acc: 
             //no size left on price level, omit from array
             return acc;
         } else {
+            // push the new price and size into the existing  data
             acc.push({id: curr.id, price, size, total: curr.total});
         }
     } else if(previousFeedData) {
+        //if the delta has no price, and we have an existing price point in our feed. use that instead
         acc.push(previousFeedData);
     } else {
+        // otherwise theres no delta data, so we can safely put this price point back into the array.
         acc.push(curr);
     }
     return acc

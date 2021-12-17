@@ -1943,10 +1943,10 @@
     "@babel/runtime" "^7.12.5"
     "@testing-library/dom" "^8.0.0"
 
-"@testing-library/user-event@^12.1.10":
-  "integrity" "sha512-IR0iWbFkgd56Bu5ZI/ej8yQwrkCv8Qydx6RzwbKz9faXazR/+5tvYKsZQgyXJiwgpcva127YO6JcWy7YlCfofQ=="
-  "resolved" "https://registry.npmjs.org/@testing-library/user-event/-/user-event-12.8.3.tgz"
-  "version" "12.8.3"
+"@testing-library/user-event@^13.5.0":
+  "integrity" "sha512-5Kwtbo3Y/NowpkbRuSepbyMFkZmHgD+vPzYB/RJ4oxt5Gj/avFFBYjhw27cqSVPVw/3a67NK1PbiIr9k4Gwmdg=="
+  "resolved" "https://registry.npmjs.org/@testing-library/user-event/-/user-event-13.5.0.tgz"
+  "version" "13.5.0"
   dependencies:
     "@babel/runtime" "^7.12.5"
 

@@ -16,6 +16,13 @@ import { content }      from "../../constants/languages";
 */
 const Selector:React.FunctionComponent<SelectorProps> = ({currentSelection, onSelect}) => { 
     const currencies: Array<string> = ["PI_XBTUSD", "PI_ETHUSD"];
+
+    const found = currencies.find(item => item === currentSelection);
+    console.log('found', found)
+    if(!found) {
+        throw new Error("Unknown currency provided")
+    }
+
     const { orderbook } = content.en;
     return (
         <div style={root}>

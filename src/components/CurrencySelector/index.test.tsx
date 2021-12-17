@@ -1,22 +1,29 @@
-import CurrencySelector from "./index";
+import CurrencySelector     from "./index";
+import { render }           from "@testing-library/react";
 
-/**
- * Tests for the CurrencySelector component
- */
 describe("Tests for currency selector", () => { 
     it("should compile at runtime", () => { 
         expect(CurrencySelector).toBeDefined();
     });
 
-    it("Should show the current selected currency", () => { 
-        //setup
-        //execute
-        //verify
+    it("should throw if an unknown currency is provided", () => { 
+          //setup
+          //execute
+          const doRender = () => render(<CurrencySelector currentSelection={""} onSelect={() => {}} />)
+
+          //verify
+          expect(doRender).toThrow();
     });
 
-    it("should call the method provided to it", () => { 
-        //setup
-        //execute
-        //verify
-    })
+    it("Should show the current selected currency", () => { 
+           //setup
+          const expectedCurrency = "PI_XBTUSD"
+
+          //execute         
+          const { getByText } = render(<CurrencySelector currentSelection={expectedCurrency} onSelect={() => {}} />)
+          
+          //verify
+          expect(getByText(expectedCurrency)).toBeInTheDocument();          
+    });
+
 } )
