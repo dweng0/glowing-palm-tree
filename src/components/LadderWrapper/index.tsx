@@ -41,6 +41,18 @@ const LadderWrapper: React.FunctionComponent = () =>  {
         setAsks(previousAsks => feed("asks", previousAsks));
         setBids(previousBids => feed("bids", previousBids));                
      }, [dataset, delta, setAsks, setBids, tickSize]);
+
+       /**
+      * IT:     Updates spread data
+      * WHEN:   Bids/Asks feed change
+      */
+     useEffect(() => { 
+        if(bids.length > 0 && asks.length > 0) {
+            setSpread(parseFloat(Math.abs(bids[0].price - asks[0].price).toFixed(2)));
+        } else { 
+            setSpread(0);
+        }
+     }, [bids, asks, setSpread]);
      
 
      // Handle rendering spread details
