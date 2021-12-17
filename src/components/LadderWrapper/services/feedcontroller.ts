@@ -48,9 +48,9 @@ export const buildFeed = (tickSize: number, feedType: FeedType, feed:Array<Feed>
 
     /**
      * return the dataset:
-     * - Transformed into a Feed array { @See Feed }
-     * - With the deltas applied {@see CryptoFeedDelta },
-     * - grouped by tickSize
+     * - Transformed into a Feed array { @See Feed } for the datagrid to consume
+     * - Apply deltas {@see CryptoFeedDelta },
+     * - Group by tickSize
      * - sorted by size desc
      * - with the total amount accumulated.
      */ 
@@ -59,18 +59,17 @@ export const buildFeed = (tickSize: number, feedType: FeedType, feed:Array<Feed>
         .reduce(applyDelta(delta[feedType], feed), [])
         .sort(byPrice)
         .reduce(groupBy(tickSize, delta[feedType].length), [])
-        .map(accumulateTotal);        
+        .map(sumTotals);        
 }
 
 const transformFeed = (acc: Array<Feed>, curr: Array<number>, index: number): Array<Feed> => { 
-    if(curr.length >0) {
-        //todo update total with incrementals
-        acc.push({id: index, price:curr[0], size:curr[1], total: curr[0]});
+    if(curr.length >0) {    
+        acc.push({id: curr[0], price:curr[0], size:curr[1], total: curr[1]});
     }
     return acc;    
 }
 
-const accumulateTotal = (item: Feed, index: number, array: Array<Feed>) => { 
+const sumTotals = (item: Feed, index: number, array: Array<Feed>) => { 
     let current = item;
     const getPreviousSize = () => (array[index - 1]) ? array[index - 1].size : 0;
 

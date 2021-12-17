@@ -9,7 +9,7 @@ export const MAX_CONNECTION_ATTEMPTS = 10;
 export const RETRY_DEBOUNCE = 2500 
 
 // number of mseconds to wait before flushing the buffer
-export const UPDATE_SPEED = 1500;
+export const UPDATE_SPEED = 1000;
 
 
 // The subscription message
