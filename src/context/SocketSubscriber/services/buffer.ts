@@ -39,10 +39,10 @@ export const bufferWriter = <T>(filteredFlush: (buffer: Array<T>) => void, speed
             try {
                 buffer.push(JSON.parse(message as string) as T);
             } catch {
-                console.error("Failed to parse the last message, was it a string?");
+                throw new Error("Failed to parse the last message, was it a string?");
             }
         } else {
-            console.error("socket message was empty!");
+            throw new Error("socket message was empty!");
         }
     }
         

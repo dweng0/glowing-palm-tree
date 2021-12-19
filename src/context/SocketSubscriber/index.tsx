@@ -83,7 +83,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 const useSubscription = (): SubscriptionContextReturnType => {
   const context = useContext(SubscriptionContext) as unknown as SubscriptionContextReturnType;
   if (context === undefined) {
-    throw new Error("useCount must be used within a CountProvider");
+    throw new Error("useSubscription must be used within a SubscriptionProvider");
   }
   return context;
 }

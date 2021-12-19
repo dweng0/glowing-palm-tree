@@ -18,7 +18,7 @@ const Selector:React.FunctionComponent<SelectorProps> = ({currentSelection, onSe
     const currencies: Array<string> = ["PI_XBTUSD", "PI_ETHUSD"];
 
     const found = currencies.find(item => item === currentSelection);
-    console.log('found', found)
+    
     if(!found) {
         throw new Error("Unknown currency provided")
     }

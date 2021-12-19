@@ -16,7 +16,7 @@ export const messageFilter = <I, D>(initialWriter: (value: any) => void, deltaWr
     */
     const filter = (bufferData: Array<any>) => { 
        
-        if(bufferData.length === 0) {
+        if(!bufferData || bufferData.length === 0) {
             return;
         }
         
@@ -26,7 +26,7 @@ export const messageFilter = <I, D>(initialWriter: (value: any) => void, deltaWr
             return initialWriter(initialData as I);
         }
     
-        //get the last message that had bids in it
+        //get the last message in the array, that has bids in it
         const lastUpdatedBidsFeed: D | undefined 
             = bufferData.reduceRight<D | undefined>((acc, item:any) => {
                 if(item.bids !== undefined && item.bids.length > 0 && acc === undefined  )  {
@@ -35,7 +35,7 @@ export const messageFilter = <I, D>(initialWriter: (value: any) => void, deltaWr
                 return acc;
             }, undefined);
     
-        // get the last message that had asks in it
+        // get the last message in the array that has asks in it
         const lastUpdatedAsksFeed: D | undefined
              = bufferData.reduceRight<D | undefined>((acc, item:any) => {
             if(item.asks !== undefined && item.asks.length > 0 && acc === undefined  )  {
