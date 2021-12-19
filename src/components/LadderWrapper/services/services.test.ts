@@ -65,7 +65,21 @@ describe( "Returning datasets", () => {
         const tickSize = 0.5, feedType = "bids";
 
         //One new update to bids
-        const delta: CryptoFeedDelta = {"feed":"book_ui_1","product_id":"PI_XBTUSD","bids":[50172.0,1231],"asks":[]};
+        const delta: CryptoFeedDelta = {"feed":"book_ui_1","product_id":"PI_XBTUSD","bids":[[80000.0,1231]],"asks":[]};
+        const results = buildFeed(tickSize, feedType, feed, mockDataSet, delta);
+        
+        //execute
+        //verify
+        expect(results.length).toBe(26);  
+    });
+
+    it("Should update an existing price if the size is greater then 1", () => { 
+        //setup
+        const feed: Array<Feed> = [];
+        const tickSize = 0.5, feedType = "bids";
+
+        //One new update to bids
+        const delta: CryptoFeedDelta = {"feed":"book_ui_1","product_id":"PI_XBTUSD","bids":[[47172.0,1231]],"asks":[]};
         const results = buildFeed(tickSize, feedType, feed, mockDataSet, delta);
         
         //execute
@@ -73,5 +87,19 @@ describe( "Returning datasets", () => {
         expect(results.length).toBe(25);  
     });
 
-    //should add the price
+  it("Should remove an existing price if the size is 0", () => { 
+        //setup
+        const feed: Array<Feed> = [];
+        const tickSize = 0.5, feedType = "bids";
+
+        //One new update to bids
+        const delta: CryptoFeedDelta = {"feed":"book_ui_1","product_id":"PI_XBTUSD","bids":[[47172.0,0]],"asks":[]};
+        const results = buildFeed(tickSize, feedType, feed, mockDataSet, delta);
+        
+        //execute
+        //verify
+        expect(results.length).toBe(24);
+    });
+    
+    
 });

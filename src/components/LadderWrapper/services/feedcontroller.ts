@@ -21,22 +21,27 @@ export const buildFeed = (tickSize: number, feedType: FeedType, feed:Array<Feed>
             .reduce(transformFeed, []);
     }
 
-    // filter out the deltas we find, any remaining ones are new and can be added in
-    const filteredDelta = [...delta[feedType]];
+    const deltaPricesToMerge = [...delta[feedType]];
+    const rawDataset = getDataset(feedType, dataset);
 
+    // filter out deltas that match the dataset, this leaves us with only new deltas
+    const deltaPricesToAdd = deltaPricesToMerge.filter(price => rawDataset.find(rawPrice => rawPrice[0] !== price[0] && price[1] > 0));
+    
     /**
      * Pipeline that returns the dataset:
-     * - Transformed into a Feed array { @See Feed } for the datagrid to consume
-     * - Apply deltas {@see CryptoFeedDelta },
-     * - Group by tickSize
+     * - Addes new prices 
+     * - Transforms raw data into a Feed array { @See Feed } for the datagrid to consume
+     * - merges deltas to existing prices {@see CryptoFeedDelta },
+     * - Groups by tickSize
      * - sorted by size desc
      * - with the total amount accumulated.
      */ 
     return getDataset(feedType, dataset)
+        .concat(deltaPricesToAdd)
         .reduce(transformFeed, [])
-        .reduce(applyDelta(filteredDelta, feed), [])
+        .reduce(applyDelta(deltaPricesToMerge, feed), [])
         .sort(byPrice)
-        .reduce(groupBy(tickSize, filteredDelta.length), [])
+        .reduce(groupBy(tickSize, deltaPricesToMerge.length), [])
         .map(sumTotals);        
 }
 
