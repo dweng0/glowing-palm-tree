@@ -2,6 +2,7 @@ import React from "react";
 import WebSocketContextProvider from "./index";
 import {render} from "@testing-library/react"
 import "@testing-library/jest-dom";
+import { websocketContextErrorBoundary } from "./errorboundaries";
 
 describe("Tests for Websocket context", () => { 
 
@@ -18,4 +19,17 @@ describe("Tests for Websocket context", () => {
         //verify
         expect(executeTest).toThrowError();
     });
+
+});
+
+describe("Error boundaries", () => { 
+    
+    it("should throw if no websocket url is provided", () => { 
+        //setup
+        //execute
+        const throwable = () => websocketContextErrorBoundary("");
+
+        //verify
+        expect(throwable).toThrow();
+    })
 });

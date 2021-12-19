@@ -1,6 +1,7 @@
 import {messageFilter} from "./messagefilter";
 import {getSocket} from "./socketfetcher";
 import { bufferWriter } from "./buffer";
+import { subscribeReducer } from "./reducer";
 
 describe("buffer",()=> {
     const mockString = JSON.stringify({test:true, best: true});
@@ -181,5 +182,23 @@ describe("Socket Fetcher", () => {
         } finally {
             expect(message).toEqual("Failed to get websocket. Timeout Reached after 3 attempts");
         }
+    });
+});
+
+describe("Reducer", () => { 
+
+    it("Should updated state when subcribed/unsubscribed/subscribe called", () => { 
+        const subResult = subscribeReducer({}, {type: "subscribed"});
+        const subbedResult = subscribeReducer({}, {type: "subscribe"});
+        const unSubResult = subscribeReducer({}, {type: "unsubscribe"});
+
+        expect(subResult.event).toEqual("subscribed")
+        expect(subbedResult.event).toEqual("subscribe")
+        expect(unSubResult.event).toEqual("unsubscribe")
+    });
+
+    it("should update state when toggle feed called", () => { 
+        const subResult = subscribeReducer({}, {type: "togglefeed", payload: "test"});
+        expect(subResult.product_ids).toEqual("test");
     });
 });
