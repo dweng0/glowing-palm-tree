@@ -1,8 +1,8 @@
 # GPT
 
-## The site can be viewed [here](https://heuristic-liskov-909740.netlify.app)
+### The site can be viewed [here](https://heuristic-liskov-909740.netlify.app)
 
-## Technical overview demo can be found [here](https://youtu.be/uByddhLc_Pw)
+### Technical overview demo can be found [here](https://youtu.be/uByddhLc_Pw)
 
 An order book using native WebSocketAPI
 
