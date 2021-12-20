@@ -1,6 +1,6 @@
 # GPT
 
-The site can be viewed [here]
+The site can be viewed [here](https://heuristic-liskov-909740.netlify.app)
 An order book using native WebSocketAPI
 
 ## Websockets and state designed with context and native react useReducer, Check out how its done with websockets!:
