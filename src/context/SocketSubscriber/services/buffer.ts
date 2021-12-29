@@ -18,8 +18,8 @@ export const bufferWriter = <T>(filteredFlush: (buffer: Array<T>) => void, speed
     };
 
     // create our interval with speeds and do tidy up
-    let timer = setInterval(flush, speed);
-    const  resetInterval = () => clearInterval(timer);
+    const timer = setInterval(flush, speed);
+    const resetInterval = () => clearInterval(timer);
     window.addEventListener("unload", resetInterval);
 
     // expose a way to shutdown the interval

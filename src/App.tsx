@@ -43,7 +43,6 @@ function App() {
         [mode],
       );
 
-
     return (
     <ColorSwitcher.Provider value={colorMode}>
         <ThemeProvider theme={theme}>

@@ -24,9 +24,8 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
      * WHEN: provided a url
      */
     useEffect(() => { 
-       
-        try {
-            let intervalIds:Array<any> = [];
+        let timeoutId:Timeout;
+        try {          
             const connect = () => {
                 // create the socket, handle the different states
                 webSocket.current = new WebSocket(socketUrl);
@@ -35,25 +34,17 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
                 webSocket.current.onopen = (event: Event)  => {
 
                     // clear any timeouts we may have
-                    intervalIds.forEach(id => clearInterval(id));
-                    intervalIds = [];
-                  
+                    if(timeoutId) { 
+                        clearTimeout(timeoutId);
+                    }
+
                     setSocketStatus({state:"OPEN", message: "socket open"});
                 }
 
                 // closed, maybe sad, retry.
                 webSocket.current.onclose = (event: Event) => {
-
-                    // retry n times. close if n is reached
-                    if(intervalIds.length < MAX_CONNECTION_ATTEMPTS) {
-
-                        setSocketStatus({state: "CONNECTING", message: "Socket connection closed, retrying "});
-                        intervalIds.push(setTimeout(connect, RETRY_DEBOUNCE));                        
-                    } else {
-                        setSocketStatus({state: "CLOSED", message: "Failed to re connect, server may be busy. "});
-                        intervalIds.forEach(id => clearInterval(id));
-                    }
-                    
+                    setSocketStatus({state: "CONNECTING", message: "Socket connection closed, retrying "});
+                    timeoutId = setTimeout(connect, RETRY_DEBOUNCE);
                 }
 
                 // fatal error, dont bother retrying
@@ -70,6 +61,9 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
                 setSocketStatus({state: "CLOSING", message: "Socket connection is closing..."});
                  if(webSocket !== null && webSocket.current !== null) {
                     webSocket.current.close();
+                 }
+                 if(timeoutId) {
+                     clearTimeout(timeoutId);
                  }
             }
 

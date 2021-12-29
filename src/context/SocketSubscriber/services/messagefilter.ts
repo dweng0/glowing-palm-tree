@@ -15,7 +15,8 @@ export const messageFilter = <I, D>(initialWriter: (value: any) => void, deltaWr
     * @param bufferData the raw data from the feed
     */
     const filter = (bufferData: Array<any>) => { 
-       
+        
+
         if(!bufferData || bufferData.length === 0) {
             return;
         }

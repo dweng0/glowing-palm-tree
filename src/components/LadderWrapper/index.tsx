@@ -25,8 +25,8 @@ const LadderWrapper: React.FunctionComponent = () =>  {
     const { state, dataset, delta, dispatch } = useSubscription();
     
     /**
-     * Hold presentational state
-     */
+    * Hold presentational state
+    */
     const [asks, setAsks]           = useState<Array<Feed>>([]);
     const [bids, setBids]           = useState<Array<Feed>>([]);
     const [spread, setSpread]       = useState<number>();

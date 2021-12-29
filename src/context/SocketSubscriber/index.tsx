@@ -1,24 +1,23 @@
-import React, { useContext, useReducer, useState, useEffect} from "react";
-import { useWebSocket } from "../WebSocket";
-import { CryptoFeed, CryptoFeedDelta } from "../../interface";
-import { bufferWriter } from "./services/buffer";
+import React, { useContext, useReducer, useState, useEffect}        from "react";
 import { SubscriptionProviderProps, SubscriptionContextReturnType } from "./interface";
-import { subscribeReducer } from "./services/reducer";
-import { messageFilter } from "./services/messagefilter";
-import { getSocket } from "./services/socketfetcher";
-import { UPDATE_SPEED } from "../../constants/datalayer";
+import { useWebSocket }                 from "../WebSocket";
+import { CryptoFeed, CryptoFeedDelta }  from "../../interface";
+import { bufferWriter }                 from "./services/buffer";
+import { subscribeReducer }             from "./services/reducer";
+import { messageFilter }                from "./services/messagefilter";
+import { getSocket }                    from "./services/socketfetcher";
+import { UPDATE_SPEED }                 from "../../constants/datalayer";
 
 // Create context privately
 const SubscriptionContext = React.createContext<SubscriptionContextReturnType | undefined>(undefined);
 
 /**
- * handles messages to/from websockets
- * @param 
+ * handles messages to/from websockets, provides a reducer for consumers to use
  */
 const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 
     // pull in websockets and setup some state
-    const {socket} = useWebSocket();
+    const {socket, state} = useWebSocket();
     const [delta, setDelta] = useState();
     const [dataset, setDataset] = useState();
 
@@ -42,7 +41,7 @@ const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
         feed: "book_ui_1",
         product_ids: ["PI_XBTUSD"]
     });
-    
+
     switch(socketState.event) {
         case "subscribe":
             getSocket(socket)
