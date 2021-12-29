@@ -24,7 +24,7 @@ const SocketContextProvider: React.FunctionComponent<WebsocketStatus> = ({socket
      * WHEN: provided a url
      */
     useEffect(() => { 
-        let timeoutId:Timeout;
+        let timeoutId:any;
         try {          
             const connect = () => {
                 // create the socket, handle the different states
