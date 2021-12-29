@@ -17,9 +17,15 @@ export const bufferWriter = <T>(filteredFlush: (buffer: Array<T>) => void, speed
         buffer = [];
     };
 
-    // create our interval with speeds and do tidy up
-    const timer = setInterval(flush, speed);
-    const resetInterval = () => clearInterval(timer);
+    // step 3. check if we have a buffertimer already and clear it.
+    let bufferTimer = (window as any).bufferTimer;
+    
+    if(bufferTimer) { 
+        clearInterval(bufferTimer);
+    }
+
+    bufferTimer = setInterval(flush, speed);
+    const resetInterval = () => clearInterval(bufferTimer);
     window.addEventListener("unload", resetInterval);
 
     // expose a way to shutdown the interval

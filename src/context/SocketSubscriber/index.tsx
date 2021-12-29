@@ -17,7 +17,7 @@ const SubscriptionContext = React.createContext<SubscriptionContextReturnType | 
 const SubscriptionProvider = ({children}: SubscriptionProviderProps) => {
 
     // pull in websockets and setup some state
-    const {socket, state} = useWebSocket();
+    const {socket} = useWebSocket();
     const [delta, setDelta] = useState();
     const [dataset, setDataset] = useState();
 

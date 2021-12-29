@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useRef, useContext } from "r
 
 import { WebsocketStatus, SocketState, WebsocketResponse } from "./interface";
 import { websocketContextErrorBoundary } from "./errorboundaries";
-import { MAX_CONNECTION_ATTEMPTS, RETRY_DEBOUNCE } from "../../constants/datalayer";
+import { RETRY_DEBOUNCE } from "../../constants/datalayer";
 
 const WebSocketContext = createContext<WebsocketResponse | undefined>(undefined);
 
