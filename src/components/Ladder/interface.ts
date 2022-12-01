@@ -14,7 +14,8 @@ export interface Feed {
  * Ladder component props
  */
 export interface LadderProps {
-    columns: GridColDef[],
+    left: boolean,
     data:Array<Feed>,
     priceColour: "red" | "green"
+
 }

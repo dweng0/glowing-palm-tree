@@ -1,5 +1,6 @@
 import { FeedType }                         from "../../../interface";
 import { GridRenderCellParams, GridColDef } from "@mui/x-data-grid";
+import { Feed } from "../../Ladder/interface";
 
 
 /**
@@ -17,6 +18,19 @@ const getPriceField = (color: "red" | "green") => {
             {(params.value).toLocaleString("en", {style: "currency", currency: "USD", minimumFractionDigits: 2})}
         </span>
     )}
+}
+
+/**
+ * Takes the feed object, returns its values as an array, without the id
+ */
+export const getFeedValues = (feed: Feed) => {
+    return Object.keys(feed).reduce((acc: string[], key: string) => {
+        if(key !== "id") {
+            acc.push(feed[key as "price" | "size" | "total"]);
+        }
+        return acc;
+    }
+    , []);
 }
 
 

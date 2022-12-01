@@ -76,8 +76,8 @@ const LadderWrapper: React.FunctionComponent = () =>  {
  
         contentArea = (
                 <div style={ladderStyle}>
-                   <Ladder priceColour={"green"} data={bids as Array<Feed>} columns={getColumns("bids")} />
-                   <Ladder priceColour={"red"} data={asks as Array<Feed>} columns={getColumns("asks")} />
+                   <Ladder priceColour={"green"} data={bids as Array<Feed>} left={true} />
+                   <Ladder priceColour={"red"} data={asks as Array<Feed>} left={false} />
                 </div>
         )
        
